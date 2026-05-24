@@ -1,4 +1,4 @@
-package edu.barnett.gearwood_puzzle_store.entity;
+package edu.barnett.gearwood_puzzle_store.entities;
 
 import edu.barnett.gearwood_puzzle_store.enums.OrderStatus;
 import jakarta.persistence.*;

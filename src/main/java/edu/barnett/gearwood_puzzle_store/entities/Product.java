@@ -1,4 +1,4 @@
-package edu.barnett.gearwood_puzzle_store.entity;
+package edu.barnett.gearwood_puzzle_store.entities;
 
 import edu.barnett.gearwood_puzzle_store.enums.Category;
 import edu.barnett.gearwood_puzzle_store.enums.Difficulty;
@@ -40,7 +40,7 @@ public class Product {
     @Column(length = 500)
     private String shortDescription;
 
-    @Column(columnDefinition = "TEXT")
+    @Column
     private String longDescription;
 
     @Column(nullable = false)
