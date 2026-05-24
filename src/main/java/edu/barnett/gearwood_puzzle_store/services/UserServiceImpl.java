@@ -37,6 +37,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User register(String firstName, String lastName, String email, String password) {
+        return null;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return null;
+    }
+
+    @Override
+    public void updateProfile(User user, String firstName, String lastName) {
+
+    }
+
+    @Override
+    public void changePassword(User user, String currentPassword, String newPassword) {
+
+    }
+
+    @Override
     public void prepareDashboardModel(Model model) {
         CurrentUserContext context = getCurrentUserContext();
         model.addAttribute("user", context.user());

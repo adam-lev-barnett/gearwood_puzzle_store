@@ -1,4 +1,4 @@
-package edu.barnett.gearwood_puzzle_store.repository;
+package edu.barnett.gearwood_puzzle_store.repositories;
 
 import edu.barnett.gearwood_puzzle_store.entity.OrderItem;
 import edu.barnett.gearwood_puzzle_store.entity.Product;

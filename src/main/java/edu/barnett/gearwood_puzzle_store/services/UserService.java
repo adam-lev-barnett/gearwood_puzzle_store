@@ -8,6 +8,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface UserService {
+    User register(String firstName, String lastName, String email, String password);
+    User findByEmail(String email);
+    void updateProfile(User user, String firstName, String lastName);
+    void changePassword(User user, String currentPassword, String newPassword);
 
     @PreAuthorize("isAuthenticated()")
     void prepareDashboardModel(Model model);

@@ -34,10 +34,10 @@ public class Product {
     @Column(nullable = false)
     private Category category;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false)
     private BigDecimal price;
 
-    @Column(length = 500)
+    @Column
     private String shortDescription;
 
     @Column

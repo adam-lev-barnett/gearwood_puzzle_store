@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
-    List<Product> findAllActive();
-    List<Product> findAll();
-    Optional<Product> findByProductCode(String productCode);
+    List<Product> getAllActive();
+    List<Product> getAll();
+    Optional<Product> getByProductCode(String productCode);
     List<Product> search(String keyword, Category category, Difficulty difficulty, BigDecimal minPrice, BigDecimal maxPrice);
     Product save(Product product);
     void activate(String productCode);
