@@ -1,0 +1,98 @@
+package edu.barnett.gearwood_puzzle_store.entity;
+
+import edu.barnett.gearwood_puzzle_store.enums.Category;
+import edu.barnett.gearwood_puzzle_store.enums.Difficulty;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "products")
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private String productCode;
+
+    @Column(nullable = false)
+    private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "manufacturer_id", nullable = false)
+    private Manufacturer manufacturer;
+
+    @Column(nullable = false)
+    private Integer numberOfPieces;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Difficulty difficulty;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Category category;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
+
+    @Column(length = 500)
+    private String shortDescription;
+
+    @Column(columnDefinition = "TEXT")
+    private String longDescription;
+
+    @Column(nullable = false)
+    private boolean active;
+
+    public Product() {}
+
+    public Product(String productCode, String name, Manufacturer manufacturer, Integer numberOfPieces,
+                   Difficulty difficulty, Category category, BigDecimal price,
+                   String shortDescription, String longDescription, boolean active) {
+        this.productCode = productCode;
+        this.name = name;
+        this.manufacturer = manufacturer;
+        this.numberOfPieces = numberOfPieces;
+        this.difficulty = difficulty;
+        this.category = category;
+        this.price = price;
+        this.shortDescription = shortDescription;
+        this.longDescription = longDescription;
+        this.active = active;
+    }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getProductCode() { return productCode; }
+    public void setProductCode(String productCode) { this.productCode = productCode; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public Manufacturer getManufacturer() { return manufacturer; }
+    public void setManufacturer(Manufacturer manufacturer) { this.manufacturer = manufacturer; }
+
+    public Integer getNumberOfPieces() { return numberOfPieces; }
+    public void setNumberOfPieces(Integer numberOfPieces) { this.numberOfPieces = numberOfPieces; }
+
+    public Difficulty getDifficulty() { return difficulty; }
+    public void setDifficulty(Difficulty difficulty) { this.difficulty = difficulty; }
+
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
+
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
+
+    public String getShortDescription() { return shortDescription; }
+    public void setShortDescription(String shortDescription) { this.shortDescription = shortDescription; }
+
+    public String getLongDescription() { return longDescription; }
+    public void setLongDescription(String longDescription) { this.longDescription = longDescription; }
+
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
+}
