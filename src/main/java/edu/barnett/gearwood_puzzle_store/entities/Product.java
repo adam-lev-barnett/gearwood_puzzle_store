@@ -46,11 +46,14 @@ public class Product {
     @Column(nullable = false)
     private boolean active;
 
+    @Column
+    private String primaryImgSource;
+
     public Product() {}
 
     public Product(String productCode, String name, Manufacturer manufacturer, Integer numberOfPieces,
                    Difficulty difficulty, Category category, BigDecimal price,
-                   String shortDescription, String longDescription, boolean active) {
+                   String shortDescription, String longDescription, boolean active, String primaryImgSource) {
         this.productCode = productCode;
         this.name = name;
         this.manufacturer = manufacturer;
@@ -61,6 +64,7 @@ public class Product {
         this.shortDescription = shortDescription;
         this.longDescription = longDescription;
         this.active = active;
+        this.primaryImgSource = primaryImgSource;
     }
 
     public Long getId() { return id; }
@@ -95,4 +99,13 @@ public class Product {
 
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
+
+    public String getPrimaryImage() {
+        return this.primaryImgSource;
+    }
+    public void setPrimaryImage(String imageSource) {
+        this.primaryImgSource = imageSource;
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package edu.barnett.gearwood_puzzle_store.entities;
 
+import edu.barnett.gearwood_puzzle_store.exceptions.BadParameterException;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
@@ -33,14 +34,15 @@ public class OrderItem {
 
     public OrderItem() {}
 
+    // LineTotal should be derived from the unit price and quantity, not set independently
     public OrderItem(OrderData order, Product product, String productName,
-                     BigDecimal unitPriceUponPurchase, Integer quantity, BigDecimal lineTotal) {
+                     BigDecimal unitPriceUponPurchase, Integer quantity) {
         this.order = order;
         this.product = product;
         this.productName = productName;
         this.unitPriceUponPurchase = unitPriceUponPurchase;
         this.quantity = quantity;
-        this.lineTotal = lineTotal;
+        this.lineTotal = unitPriceUponPurchase.multiply(BigDecimal.valueOf(quantity));
     }
 
     public Long getId() { return id; }
@@ -62,5 +64,8 @@ public class OrderItem {
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
 
     public BigDecimal getLineTotal() { return lineTotal; }
-    public void setLineTotal(BigDecimal lineTotal) { this.lineTotal = lineTotal; }
+    public void setLineTotal(Integer quantity, BigDecimal unitPrice) {
+        if (quantity < 0 || unitPrice.signum() < 0) throw new BadParameterException("Quantity and unit price must both be greater than or equal to 0");
+        this.lineTotal = unitPriceUponPurchase.multiply(BigDecimal.valueOf(quantity));
+    }
 }

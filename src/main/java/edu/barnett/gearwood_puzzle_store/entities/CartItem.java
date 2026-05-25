@@ -1,6 +1,8 @@
 package edu.barnett.gearwood_puzzle_store.entities;
 
+import edu.barnett.gearwood_puzzle_store.exceptions.BadParameterException;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 
 @Entity
 @Table(name = "cart_items")
@@ -18,6 +20,8 @@ public class CartItem {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    // This needs to stay at 0 so that we can set a conditional that, when the quantity reaches 0, it's removed from the cart
+    @Min(1)
     @Column(nullable = false)
     private Integer quantity;
 
@@ -39,5 +43,9 @@ public class CartItem {
     public void setProduct(Product product) { this.product = product; }
 
     public Integer getQuantity() { return quantity; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+
+    public void setQuantity(Integer quantity) {
+        if (quantity <= 0) throw new BadParameterException("Quantity must be greater than zero");
+        this.quantity = quantity;
+    }
 }
