@@ -1,6 +1,6 @@
 package edu.barnett.gearwood_puzzle_store.repositories;
 
-import edu.barnett.gearwood_puzzle_store.entity.Manufacturer;
+import edu.barnett.gearwood_puzzle_store.entities.Manufacturer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
