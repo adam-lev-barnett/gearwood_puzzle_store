@@ -3,7 +3,6 @@ package edu.barnett.gearwood_puzzle_store.services;
 import edu.barnett.gearwood_puzzle_store.entities.User;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -27,7 +26,6 @@ public interface UserService {
 
     List<User> getAllUsers();
 
-    // Note: Usually public registration shouldn't be restricted
     User registerNewUser(User user, List<String> roleNames);
 
     void updateUser(User savedUser);

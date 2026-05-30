@@ -48,11 +48,14 @@ public class SecurityConfig {
 
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/home").permitAll()
+                        .requestMatchers("/products/catalog").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/register").permitAll()
+                        // These need to exist to give any user access to any of these resources
                         .requestMatchers("/", "/index", "/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
 
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .exceptionHandling(ex -> ex

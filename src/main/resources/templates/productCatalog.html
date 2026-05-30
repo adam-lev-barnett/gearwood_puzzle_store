@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/MainLayout}" lang="">
+<head>
+    <title>Products</title>
+    <link rel="stylesheet" th:href="@{/css/ProductCatalog.css}">
+</head>
+<body>
+    <main layout:fragment="content">
+        <div class="catalog-container">
+            <h1>Product Catalog</h1>
+            <form method="get" th:action="@{/products/catalog}" id="search-form">
+                <label>
+                    <input type="text" name="keyword" placeholder="Search by name..."
+                           th:value="${keyword}">
+                </label>
+                <label>
+                    <select name="category">
+                        <option value="">All Categories</option>
+                        <option th:each="cat : ${categories}"
+                                th:value="${cat}"
+                                th:text="${cat}"
+                                th:selected="${cat == selectedCategory}">
+                        </option>
+                    </select>
+                </label>
+                <label>
+                    <select name="difficulty">
+                        <option value="">All Difficulties</option>
+                        <option th:each="diff : ${difficulties}"
+                                th:value="${diff}"
+                                th:text="${diff}"
+                                th:selected="${diff == selectedDifficulty}">
+                        </option>
+                    </select>
+                </label>
+                <label>
+                    <input type="number" name="minPrice" placeholder="Min price" step="0.01" min="0"
+                           th:value="${minPrice}">
+                </label>
+                <label>
+                    <input type="number" name="maxPrice" placeholder="Max price" step="0.01" min="0"
+                           th:value="${maxPrice}">
+                </label>
+                <button type="submit">Search</button>
+                <a th:href="@{/products/catalog}">Clear</a>
+            </form>
+
+            <table id="product-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Manufacturer</th>
+                        <th>Category</th>
+                        <th>Difficulty</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                        <th sec:authorize="hasRole('ADMIN')">Active</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="product : ${products}">
+                        <td>
+                            <img th:src="${product.imgSrc() != null ? product.imgSrc() : '/product-images/default.jpg'}"
+                                 th:alt="${product.name()}">
+                        </td>
+                        <td>
+                            <a th:href="@{/products/{code}(code=${product.productCode()})}"
+                               th:text="${product.name()}"></a>
+                        </td>
+                        <td th:text="${product.manufacturer()}"></td>
+                        <td th:text="${product.category()}"></td>
+                        <td th:text="${product.difficulty()}"></td>
+                        <td th:text="${'$' + product.price()}"></td>
+                        <td th:text="${product.shortDescription()}"></td>
+                        <td sec:authorize="hasRole('ADMIN')" th:text="${product.isActive() ? 'Yes' : 'No'}"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(products)}">
+                        <td colspan="8">No products found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>

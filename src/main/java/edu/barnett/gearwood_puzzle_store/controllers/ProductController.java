@@ -62,7 +62,7 @@ public class ProductController {
         model.addAttribute("minPrice", minPrice);
         model.addAttribute("maxPrice", maxPrice);
 
-        return "ProductCatalog";
+        return "productCatalog";
     }
 
     /** Individual product detail page*/
@@ -71,7 +71,7 @@ public class ProductController {
         ProductSummaryDto product = productService.getByProductCode(productCode);
         model.addAttribute("product", product);
 
-        return "ProductDetails";
+        return "productDetails";
     }
 
 }

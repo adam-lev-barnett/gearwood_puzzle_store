@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Jost:wght@300;400;500&display=swap');
+
+:root {
+    --bg:             #F8F4EF;
+    --surface:        #FFFFFF;
+    --text-primary:   #1C1410;
+    --text-secondary: #7A6352;
+    --accent:         #C4822A;
+    --accent-hover:   #A56A1C;
+    --border:         #E2D5C8;
+    --row-alt:        #FBF8F4;
+    --row-hover:      #F4EDE3;
+    --shadow:         0 2px 12px rgba(44, 26, 14, 0.07);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+}
+
+h1 {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.6rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text-primary);
+}

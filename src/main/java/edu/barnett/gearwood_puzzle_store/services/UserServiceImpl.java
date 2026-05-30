@@ -1,6 +1,5 @@
 package edu.barnett.gearwood_puzzle_store.services;
 
-import edu.barnett.gearwood_puzzle_store.entities.Role;
 import edu.barnett.gearwood_puzzle_store.entities.User;
 import edu.barnett.gearwood_puzzle_store.repositories.RoleRepository;
 import edu.barnett.gearwood_puzzle_store.repositories.UserRepository;
@@ -30,9 +29,9 @@ public class UserServiceImpl implements UserService {
 
     private CurrentUserContext getCurrentUserContext() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        String email = auth.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
         return new CurrentUserContext(user, auth);
     }
 
@@ -85,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        return userRepository.findAllByOrderByLastNameAsc();
+        return userRepository.findAll();
     }
 
 
@@ -97,8 +96,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        String email = auth.getName();
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
     }
 }

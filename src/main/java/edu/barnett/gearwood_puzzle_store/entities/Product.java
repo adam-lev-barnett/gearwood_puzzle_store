@@ -4,6 +4,8 @@ import edu.barnett.gearwood_puzzle_store.enums.Category;
 import edu.barnett.gearwood_puzzle_store.enums.Difficulty;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "products")
