@@ -14,23 +14,34 @@ public interface UserService {
     void changePassword(String currentPassword, String newPassword);
 
     @PreAuthorize("isAuthenticated()")
-    void prepareDashboardModel(Model model);
-
-    @PreAuthorize("isAuthenticated()")
     void prepareProfileModel(Model model);
 
     @PreAuthorize("isAuthenticated()")
-    void prepareSettingsModel(Model model);
+    void prepareOrderDetailsModel(Model model);
+
+    @PreAuthorize("isAuthenticated()")
+    void prepareCartModel(Model model);
+
+    @PreAuthorize("isAuthenticated()")
+    void prepareCheckoutModel(Model model);
+
+    @PreAuthorize("isAuthenticated()")
+    void prepareOrderSucceedsModel(Model model);
+
+    void prepareLoginModel(Model model);
+
+    void prepareRegisterModel(Model model);
+
+    void prepareLogoutModel(Model model);
 
     UserDto findUserByEmail(String email);
 
     List<User> getAllUsers();
 
-    UserDto registerNewUser(User user);
-
+    void registerNewUser(User user);
 
     CurrentUserContext getCurrentUserContext();
 
     @PreAuthorize("isAuthenticated()")
-    UserDto updateUser(User updateUser, String password);
+    void updateUser(User updateUser, String password);
 }

@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Override
     public CurrentUserContext getCurrentUserContext() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
@@ -37,7 +38,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
         return new CurrentUserContext(user, auth);
     }
-
 
     @Override
     public UserDto findUserByEmail(String email) {
@@ -53,30 +53,53 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void prepareDashboardModel(Model model) {
-        CurrentUserContext context = getCurrentUserContext();
-        model.addAttribute("user", context.user());
-        model.addAttribute("authorization", context.auth());
-    }
-
-    @Override
     public void prepareProfileModel(Model model) {
+
         model.addAttribute("user", getCurrentUserContext().user());
     }
 
     @Override
-    public void prepareSettingsModel(Model model) {
+    public void prepareOrderDetailsModel(Model model) {
 
     }
 
     @Override
-    public UserDto registerNewUser(User user) {
+    public void prepareCartModel(Model model) {
+
+    }
+
+    @Override
+    public void prepareCheckoutModel(Model model) {
+
+    }
+
+    @Override
+    public void prepareOrderSucceedsModel(Model model) {
+
+    }
+
+    @Override
+    public void prepareLoginModel(Model model) {
+
+    }
+
+    @Override
+    public void prepareRegisterModel(Model model) {
+
+    }
+
+    @Override
+    public void prepareLogoutModel(Model model) {
+
+    }
+
+    @Override
+    public void registerNewUser(User user) {
         Role customerRole = roleRepository.findByName("CUSTOMER")
                 .orElseThrow(() -> new RuntimeException("CUSTOMER role not found"));
         user.addRole(customerRole);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        User newUser =  userRepository.save(user);
-        return new UserDto(newUser);
+        userRepository.save(user);
     }
 
     @Override
@@ -85,14 +108,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(User updateUser, String password) {
+    public void updateUser(User updateUser, String password) {
         User currentUser = this.getCurrentUserContext().user();
         if (!currentUser.getPassword().equals(password)) throw new BadCredentialsException("Could not update user information. Wrong password");
         // Last name or first name may be null or empty if user is only updating one. So no error thrown.
         if (updateUser.getFirstName() != null && !updateUser.getFirstName().isEmpty()) currentUser.setFirstName(updateUser.getFirstName());
         if (updateUser.getLastName() != null && !updateUser.getLastName().isEmpty()) currentUser.setLastName(updateUser.getLastName());
-        User updatedUser = userRepository.save(currentUser);
-        return new UserDto(updatedUser);
+        userRepository.save(currentUser);
     }
 
 }

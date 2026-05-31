@@ -22,25 +22,11 @@ public class LogInController {
         this.userService = userService;
     }
 
-    @GetMapping("/dashboard")
-    @PreAuthorize("isAuthenticated()")
-    public String showDashboard(Model model) {
-        userService.prepareDashboardModel(model);
-        return "dashboard";
-    }
-
     @GetMapping("/profile")
     @PreAuthorize("isAuthenticated()")
     public String showProfile(Model model) {
         userService.prepareProfileModel(model);
         return "profile";
-    }
-
-    @GetMapping("/settings")
-    @PreAuthorize("isAuthenticated()")
-    public String showSettings(Model model) {
-        userService.prepareSettingsModel(model);
-        return "account_settings";
     }
 
     @PostMapping("/settings")
@@ -57,10 +43,4 @@ public class LogInController {
         return "redirect:/home";
     }
 
-    @GetMapping("/admin/users")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String viewAllUsers(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
-        return "all_users";
-    }
 }

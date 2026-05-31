@@ -9,7 +9,71 @@
 </head>
 <body>
     <main layout:fragment="content">
-        <h1>Checkout</h1>
+        <div class="checkout-container">
+            <a th:href="@{/cart}" class="back-link">&larr; Back to Cart</a>
+            <h1>Checkout</h1>
+
+            <!-- ${error} : "payment declined" / validation message set by the controller -->
+            <p class="form-error" th:if="${error}" th:text="${error}"></p>
+
+            <div class="checkout-layout">
+                <form class="checkout-form" th:action="@{/checkout}" method="post">
+                    <fieldset>
+                        <legend>Shipping Information</legend>
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required>
+
+                        <label for="address">Address Line 1</label>
+                        <input type="text" id="address" name="address" required>
+
+                        <label for="address2">Address Line 2</label>
+                        <input type="text" id="address2" name="address2">
+
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" required>
+
+                        <label for="state">State</label>
+                        <input type="text" id="state" name="state" required>
+
+                        <label for="zip">ZIP</label>
+                        <input type="text" id="zip" name="zip" required>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Payment Information</legend>
+                        <label for="cardholderName">Cardholder Name</label>
+                        <input type="text" id="cardholderName" name="cardholderName" required>
+
+                        <label for="cardNumber">Card Number</label>
+                        <input type="text" id="cardNumber" name="cardNumber" required>
+
+                        <label for="expirationMonth">Expiration Month (MM)</label>
+                        <input type="text" id="expirationMonth" name="expirationMonth" maxlength="2" required>
+
+                        <label for="expirationYear">Expiration Year (YYYY)</label>
+                        <input type="text" id="expirationYear" name="expirationYear" maxlength="4" required>
+
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" name="cvv" maxlength="4" required>
+                    </fieldset>
+
+                    <button type="submit" class="place-order-button">Place Order</button>
+                </form>
+
+                <!-- ${cartItems} + ${cart} : same summary objects used on the cart page -->
+                <aside class="order-summary card">
+                    <h2>Order Summary</h2>
+                    <div th:each="item : ${cartItems}" class="summary-item">
+                        <span th:text="${item.name()}"></span>
+                        <span th:text="${'$' + item.lineTotal()}"></span>
+                    </div>
+                    <div class="summary-row"><span>Subtotal</span><span th:text="${'$' + cart?.subtotal()}"></span></div>
+                    <div class="summary-row"><span>Shipping</span><span th:text="${'$' + cart?.shipping()}"></span></div>
+                    <div class="summary-row"><span>Tax</span><span th:text="${'$' + cart?.tax()}"></span></div>
+                    <div class="summary-row total"><span>Total</span><span th:text="${'$' + cart?.total()}"></span></div>
+                </aside>
+            </div>
+        </div>
     </main>
 </body>
 </html>

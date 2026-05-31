@@ -9,7 +9,76 @@
 </head>
 <body>
     <main layout:fragment="content">
-        <h1>Edit Product</h1>
+        <div class="product-form-container">
+            <a th:href="@{/products/catalog}" class="back-link">&larr; Back to Products</a>
+            <h1>Edit Product</h1>
+
+            <p class="form-error" th:if="${error}" th:text="${error}"></p>
+
+            <!-- ${product} : ProductAdminDto (summary + acquiredDate) used to prefill.
+                 ${manufacturers} ${difficulties} ${categories} : option sources. -->
+            <form class="product-form" method="post"
+                  th:action="@{/products/{code}/edit(code=${product?.summary()?.productCode()})}">
+                <div class="form-grid">
+                    <label>Product Code
+                        <input type="text" name="productCode" th:value="${product?.summary()?.productCode()}" required>
+                    </label>
+                    <label>Name
+                        <input type="text" name="name" th:value="${product?.summary()?.name()}" required>
+                    </label>
+                    <label>Manufacturer
+                        <select name="manufacturer" required>
+                            <option value="">-- Select Manufacturer --</option>
+                            <option th:each="m : ${manufacturers}"
+                                    th:value="${m.name()}"
+                                    th:text="${m.name()}"
+                                    th:selected="${product != null and m.name() == product.summary().manufacturer()}"></option>
+                        </select>
+                    </label>
+                    <label>Pieces
+                        <input type="number" name="numberOfPieces" min="1"
+                               th:value="${product?.summary()?.numberOfPieces()}" required>
+                    </label>
+                    <label>Difficulty
+                        <select name="difficulty" required>
+                            <option value="">-- Select Difficulty --</option>
+                            <option th:each="d : ${difficulties}"
+                                    th:value="${d}"
+                                    th:text="${d}"
+                                    th:selected="${product != null and d == product.summary().difficulty()}"></option>
+                        </select>
+                    </label>
+                    <label>Category
+                        <select name="category" required>
+                            <option value="">-- Select Category --</option>
+                            <option th:each="c : ${categories}"
+                                    th:value="${c}"
+                                    th:text="${c}"
+                                    th:selected="${product != null and c == product.summary().category()}"></option>
+                        </select>
+                    </label>
+                    <label>Price
+                        <input type="number" name="price" step="0.01" min="0"
+                               th:value="${product?.summary()?.price()}" required>
+                    </label>
+                    <label>Acquired Date
+                        <input type="date" name="acquiredDate" th:value="${product?.acquiredDate()}">
+                    </label>
+                </div>
+
+                <label class="full-width">Short Description
+                    <input type="text" name="shortDescription" th:value="${product?.summary()?.shortDescription()}">
+                </label>
+                <label class="full-width">Long Description
+                    <textarea name="longDescription" rows="4" th:text="${product?.summary()?.longDescription()}"></textarea>
+                </label>
+
+                <div class="form-actions">
+                    <button type="submit" class="submit-button">Save Changes</button>
+                    <a th:href="@{/products/catalog}" class="cancel-link">Cancel</a>
+                </div>
+            </form>
+        </div>
     </main>
 </body>
 </html>

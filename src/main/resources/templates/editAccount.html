@@ -4,12 +4,36 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layouts/MainLayout}">
 <head>
-    <title>Edit Account</title>
+    <title>Edit Profile</title>
     <link rel="stylesheet" th:href="@{/css/EditAccount.css}">
 </head>
 <body>
     <main layout:fragment="content">
-        <h1>Edit Account</h1>
+        <div class="edit-profile-container">
+            <a th:href="@{/account}" class="back-link">&larr; Back to Account</a>
+            <h1>Edit Profile</h1>
+
+            <!-- ${user} : UserDto used to prefill values. Email is intentionally read-only (spec 3.1). -->
+            <p class="form-error" th:if="${error}" th:text="${error}"></p>
+
+            <form class="edit-profile-form" th:action="@{/account/edit}" method="post">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" th:value="${user?.firstName()}" required>
+
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" th:value="${user?.lastName()}" required>
+
+                <p class="readonly-field">
+                    <span class="label">Email (cannot be changed):</span>
+                    <span th:text="${user?.email()}"></span>
+                </p>
+
+                <div class="form-actions">
+                    <button type="submit" class="submit-button">Save Changes</button>
+                    <a th:href="@{/account}" class="cancel-link">Cancel</a>
+                </div>
+            </form>
+        </div>
     </main>
 </body>
 </html>

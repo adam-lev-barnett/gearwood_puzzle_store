@@ -8,8 +8,17 @@
 </head>
 <body>
     <main layout:fragment="content">
-        <h1>An Error Occurred</h1>
-        <p th:text="${errorMessage}">Something went wrong. Please try again.</p>
+        <div class="error-container card">
+            <h1>Something went wrong</h1>
+
+            <!-- ${errorMessage} : friendly message set by your controller/handler.
+                 Never render raw exceptions or stack traces here (spec 13). -->
+            <p th:text="${errorMessage} ?: 'An unexpected error occurred. Please try again.'">
+                Something went wrong. Please try again.
+            </p>
+
+            <a th:href="@{/home}" class="action-button">Return Home</a>
+        </div>
     </main>
 </body>
 </html>

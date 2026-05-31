@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/MainLayout}">
+<head>
+    <title>Order Details</title>
+    <link rel="stylesheet" th:href="@{/css/OrderDetails.css}">
+</head>
+<body>
+    <main layout:fragment="content">
+        <div class="order-details-container">
+            <a th:href="@{/account}" class="back-link">&larr; Back to Account</a>
+            <h1>Order Details</h1>
+
+            <!-- ${order} : order DTO (orderNumber, orderDateTime, orderStatus, transactionId,
+                            totalAmount, shippingInfo, items) -->
+            <div class="order-details-grid">
+                <section class="order-information card">
+                    <h2>Order Information</h2>
+                    <p><span class="label">Order #:</span> <span th:text="${order?.orderNumber()}"></span></p>
+                    <p><span class="label">Date:</span> <span th:text="${order?.orderDateTime()}"></span></p>
+                    <p><span class="label">Status:</span> <span th:text="${order?.orderStatus()}"></span></p>
+                    <p><span class="label">Transaction ID:</span> <span th:text="${order?.transactionId()}"></span></p>
+                    <p><span class="label">Total:</span> <span th:text="${'$' + order?.totalAmount()}"></span></p>
+                </section>
+
+                <!-- shippingInfo accessors: name, address, address2, city, state, zip -->
+                <section class="shipping-information card">
+                    <h2>Shipping Information</h2>
+                    <p th:text="${order?.shippingInfo()?.name()}"></p>
+                    <p th:text="${order?.shippingInfo()?.address()}"></p>
+                    <p th:text="${order?.shippingInfo()?.address2()}"></p>
+                    <p>
+                        <span th:text="${order?.shippingInfo()?.city()}"></span>,
+                        <span th:text="${order?.shippingInfo()?.state()}"></span>
+                        <span th:text="${order?.shippingInfo()?.zip()}"></span>
+                    </p>
+                </section>
+            </div>
+
+            <!-- order.items() : line items (imgSrc, productName, quantity, unitPrice, lineTotal) -->
+            <section class="order-items card">
+                <h2>Items</h2>
+                <div th:each="item : ${order?.items()}" class="order-item-row">
+                    <img class="order-item-image" th:src="${item.imgSrc()}" th:alt="${item.productName()}">
+                    <div class="order-item-info">
+                        <h3 th:text="${item.productName()}"></h3>
+                        <p>Quantity: <span th:text="${item.quantity()}"></span></p>
+                        <p>Unit Price: <span th:text="${'$' + item.unitPrice()}"></span></p>
+                    </div>
+                    <span class="order-item-total" th:text="${'$' + item.lineTotal()}"></span>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

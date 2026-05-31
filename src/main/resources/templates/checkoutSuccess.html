@@ -9,7 +9,18 @@
 </head>
 <body>
     <main layout:fragment="content">
-        <h1>Order Confirmed!</h1>
+        <div class="success-container card">
+            <h1>Thank you for your order!</h1>
+            <p>Your order has been placed successfully.</p>
+
+            <!-- ${orderNumber} : application-defined order number (e.g. ORD-7E9F7591) -->
+            <p class="order-number">Order Number: <span th:text="${orderNumber}"></span></p>
+
+            <div class="success-actions">
+                <a th:href="@{/products/catalog}" class="action-button">Continue Shopping</a>
+                <a th:href="@{/account}" class="action-link">My Account</a>
+            </div>
+        </div>
     </main>
 </body>
 </html>

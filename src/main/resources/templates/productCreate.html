@@ -9,7 +9,64 @@
 </head>
 <body>
     <main layout:fragment="content">
-        <h1>Create Product</h1>
+        <div class="product-form-container">
+            <a th:href="@{/products/catalog}" class="back-link">&larr; Back to Products</a>
+            <h1>Create Product</h1>
+
+            <!-- ${error} : validation message (e.g. duplicate product code) -->
+            <p class="form-error" th:if="${error}" th:text="${error}"></p>
+
+            <!-- ${manufacturers} ${difficulties} ${categories} : option sources for the selects -->
+            <form class="product-form" th:action="@{/products/new}" method="post">
+                <div class="form-grid">
+                    <label>Product Code
+                        <input type="text" name="productCode" required>
+                    </label>
+                    <label>Name
+                        <input type="text" name="name" required>
+                    </label>
+                    <label>Manufacturer
+                        <select name="manufacturer" required>
+                            <option value="">-- Select Manufacturer --</option>
+                            <option th:each="m : ${manufacturers}" th:value="${m.name()}" th:text="${m.name()}"></option>
+                        </select>
+                    </label>
+                    <label>Pieces
+                        <input type="number" name="numberOfPieces" min="1" required>
+                    </label>
+                    <label>Difficulty
+                        <select name="difficulty" required>
+                            <option value="">-- Select Difficulty --</option>
+                            <option th:each="d : ${difficulties}" th:value="${d}" th:text="${d}"></option>
+                        </select>
+                    </label>
+                    <label>Category
+                        <select name="category" required>
+                            <option value="">-- Select Category --</option>
+                            <option th:each="c : ${categories}" th:value="${c}" th:text="${c}"></option>
+                        </select>
+                    </label>
+                    <label>Price
+                        <input type="number" name="price" step="0.01" min="0" required>
+                    </label>
+                    <label>Acquired Date
+                        <input type="date" name="acquiredDate">
+                    </label>
+                </div>
+
+                <label class="full-width">Short Description
+                    <input type="text" name="shortDescription">
+                </label>
+                <label class="full-width">Long Description
+                    <textarea name="longDescription" rows="4"></textarea>
+                </label>
+
+                <div class="form-actions">
+                    <button type="submit" class="submit-button">Create Product</button>
+                    <a th:href="@{/products/catalog}" class="cancel-link">Cancel</a>
+                </div>
+            </form>
+        </div>
     </main>
 </body>
 </html>

@@ -6,10 +6,56 @@
 <head>
     <title>Home</title>
     <link rel="stylesheet" th:href="@{/css/Home.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/ProductCard.css}">
 </head>
 <body>
     <main layout:fragment="content">
-        <h1>Welcome to Gearwood Puzzle Store</h1>
+
+        <section class="hero">
+            <p class="hero-eyebrow">Handcrafted Wooden Puzzle Store</p>
+            <h1>Beautiful puzzles built to challenge, display, and enjoy.</h1>
+            <p class="hero-subtitle">
+                Discover mechanical builds, decorative pieces, and gift-worthy wooden puzzles
+                for curious minds and careful hands.
+            </p>
+            <a th:href="@{/products/catalog}" class="hero-cta">Shop all puzzles</a>
+        </section>
+
+        <!-- ${categories} : Category enum values (Category.values()) -->
+        <section class="category-section">
+            <h2>Find the style that fits your interest</h2>
+            <div class="category-grid">
+                <a th:each="cat : ${categories}"
+                   th:href="@{/products/catalog(category=${cat})}"
+                   class="category-card">
+                    <span th:text="${cat}">CATEGORY</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ${featuredProducts} : List<ProductSummaryDto> of active products to highlight -->
+        <section class="featured-section">
+            <div class="featured-header">
+                <h2>Popular puzzles to start with</h2>
+                <a th:href="@{/products/catalog}">View all products</a>
+            </div>
+            <div class="product-grid">
+                <th:block th:each="product : ${featuredProducts}">
+                    <div th:replace="~{fragments/productCard ::
+                        productCard(
+                            ${product.productCode()},
+                            ${product.imgSrc()},
+                            ${product.name()},
+                            ${product.manufacturer()},
+                            ${product.category()},
+                            ${product.difficulty()},
+                            ${product.price()},
+                            ${product.shortDescription()})}">
+                    </div>
+                </th:block>
+            </div>
+        </section>
+
     </main>
 </body>
 </html>

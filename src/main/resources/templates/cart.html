@@ -9,7 +9,56 @@
 </head>
 <body>
     <main layout:fragment="content">
-        <h1>Shopping Cart</h1>
+        <div class="cart-container">
+            <h1>Your Cart</h1>
+
+            <div class="cart-layout">
+                <!-- ${cartItems} : List of cart line items (productCode, name, imgSrc, category,
+                                    difficulty, unitPrice, quantity, lineTotal) -->
+                <div class="cart-items">
+                    <div th:each="item : ${cartItems}" class="cart-item card">
+                        <img class="cart-item-image" th:src="${item.imgSrc()}" th:alt="${item.name()}">
+                        <div class="cart-item-info">
+                            <h3 th:text="${item.name()}"></h3>
+                            <p><span class="label">Product Code:</span> <span th:text="${item.productCode()}"></span></p>
+                            <p><span class="label">Category:</span> <span th:text="${item.category()}"></span></p>
+                            <p><span class="label">Difficulty:</span> <span th:text="${item.difficulty()}"></span></p>
+                            <p><span class="label">Unit Price:</span> <span th:text="${'$' + item.unitPrice()}"></span></p>
+                            <p><span class="label">Line Total:</span> <span th:text="${'$' + item.lineTotal()}"></span></p>
+
+                            <form class="cart-item-update" th:action="@{/cart/update}" method="post">
+                                <input type="hidden" name="productCode" th:value="${item.productCode()}">
+                                <label>Quantity
+                                    <input type="number" name="quantity" min="1" th:value="${item.quantity()}">
+                                </label>
+                                <button type="submit">Update</button>
+                            </form>
+
+                            <form th:action="@{/cart/remove}" method="post">
+                                <input type="hidden" name="productCode" th:value="${item.productCode()}">
+                                <button type="submit" class="remove-button">Remove</button>
+                            </form>
+
+                            <a th:href="@{/products/{code}(code=${item.productCode()})}">View Product</a>
+                        </div>
+                    </div>
+                    <p th:if="${#lists.isEmpty(cartItems)}" class="empty-state">Your cart is empty.</p>
+                </div>
+
+                <!-- ${cart} : order summary object (subtotal, shipping, freeShipping, tax, total) -->
+                <aside class="order-summary card">
+                    <h2>Order Summary</h2>
+                    <div class="summary-row"><span>Subtotal</span><span th:text="${'$' + cart?.subtotal()}"></span></div>
+                    <div class="summary-row"><span>Estimated Shipping</span><span th:text="${'$' + cart?.shipping()}"></span></div>
+                    <p class="free-shipping-note" th:if="${cart?.freeShipping()}">You qualified for free shipping.</p>
+                    <div class="summary-row"><span>Estimated Tax</span><span th:text="${'$' + cart?.tax()}"></span></div>
+                    <div class="summary-row total"><span>Estimated Total</span><span th:text="${'$' + cart?.total()}"></span></div>
+
+                    <a th:href="@{/products/catalog}" class="continue-link">Continue Shopping</a>
+                    <a th:href="@{/checkout}" class="checkout-button">Proceed to Checkout</a>
+                </aside>
+            </div>
+        </div>
     </main>
 </body>
 </html>

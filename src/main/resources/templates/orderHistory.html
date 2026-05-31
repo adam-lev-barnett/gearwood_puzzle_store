@@ -9,7 +9,24 @@
 </head>
 <body>
     <main layout:fragment="content">
-        <h1>Order History</h1>
+        <div class="order-history-container">
+            <a th:href="@{/account}" class="back-link">&larr; Back to Account</a>
+            <h1>Order History</h1>
+
+            <!-- ${orders} : List of the user's orders (orderNumber, orderDateTime, orderStatus, totalAmount) -->
+            <div th:each="order : ${orders}" class="order-row card">
+                <div>
+                    <p class="order-number">Order # <span th:text="${order.orderNumber()}"></span></p>
+                    <p class="order-date" th:text="${order.orderDateTime()}"></p>
+                    <p class="order-status">Status: <span th:text="${order.orderStatus()}"></span></p>
+                </div>
+                <div class="order-row-right">
+                    <span class="order-total" th:text="${'$' + order.totalAmount()}"></span>
+                    <a th:href="@{/account/orders/{num}(num=${order.orderNumber()})}" class="action-button">View Details</a>
+                </div>
+            </div>
+            <p th:if="${#lists.isEmpty(orders)}" class="empty-state">You have no orders yet.</p>
+        </div>
     </main>
 </body>
 </html>
