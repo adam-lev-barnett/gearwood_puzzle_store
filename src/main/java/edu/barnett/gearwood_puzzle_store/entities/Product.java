@@ -4,6 +4,7 @@ import edu.barnett.gearwood_puzzle_store.enums.Category;
 import edu.barnett.gearwood_puzzle_store.enums.Difficulty;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +52,20 @@ public class Product {
     @Column
     private String primaryImgSource;
 
+    /** Admin-only field — the date the product was acquired into the catalog.
+     *  Per spec it defaults to the current date on creation. Never exposed to customers. */
+    @Column(nullable = false)
+    private LocalDate acquiredDate;
+
     public Product() {}
+
+    /** Default acquiredDate to the current date on first persist if it wasn't set explicitly. */
+    @PrePersist
+    private void onCreate() {
+        if (acquiredDate == null) {
+            acquiredDate = LocalDate.now();
+        }
+    }
 
     public Product(String productCode, String name, Manufacturer manufacturer, Integer numberOfPieces,
                    Difficulty difficulty, Category category, BigDecimal price,
@@ -108,6 +122,9 @@ public class Product {
     public void setPrimaryImage(String imageSource) {
         this.primaryImgSource = imageSource;
     }
+
+    public LocalDate getAcquiredDate() { return acquiredDate; }
+    public void setAcquiredDate(LocalDate acquiredDate) { this.acquiredDate = acquiredDate; }
 
 
 }

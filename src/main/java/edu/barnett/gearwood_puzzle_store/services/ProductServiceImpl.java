@@ -1,5 +1,6 @@
 package edu.barnett.gearwood_puzzle_store.services;
 
+import edu.barnett.gearwood_puzzle_store.dtos.ProductAdminDto;
 import edu.barnett.gearwood_puzzle_store.dtos.ProductSummaryDto;
 import edu.barnett.gearwood_puzzle_store.entities.Product;
 import edu.barnett.gearwood_puzzle_store.enums.Category;
@@ -42,10 +43,18 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductSummaryDto getByProductCode(String productCode) {
-        Product product =  productRepo
+        return new ProductSummaryDto(findProductOrThrow(productCode));
+    }
+
+    @Override
+    public ProductAdminDto getByProductCodeAsAdmin(String productCode) {
+        return new ProductAdminDto(findProductOrThrow(productCode));
+    }
+
+    private Product findProductOrThrow(String productCode) {
+        return productRepo
                 .findByProductCode(productCode)
-                .orElseThrow( () -> new NotFoundException("Product not found"));
-        return new ProductSummaryDto(product);
+                .orElseThrow(() -> new NotFoundException("Product not found"));
     }
 
     // ~~~~~~~ Search methods ~~~~~~~~~~~~~~
