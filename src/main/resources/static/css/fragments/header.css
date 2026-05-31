@@ -1,76 +1,80 @@
 .main-header {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    height: 68px;
-    padding: 0 2rem;
-    background: var(--text-primary);
-    border-bottom: 2px solid var(--accent);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    padding: 1.75rem 3rem 1.25rem;
+    border-bottom: 1px solid var(--border);
 }
 
-/* ── Left & Right nav ───────────────────────────────────────── */
-
-.nav-left,
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 1.75rem;
-    flex: 1;
-}
-
-.nav-right {
-    justify-content: flex-end;
-}
-
-.nav-left a,
-.nav-right a {
-    font-family: 'Jost', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-.nav-left a:hover,
-.nav-right a:hover {
-    color: var(--accent);
-}
-
-.nav-right .greeting {
-    font-family: 'Jost', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 300;
-    letter-spacing: 0.06em;
-    color: rgba(255, 255, 255, 0.45);
-    font-style: italic;
-}
-
-/* ── Center logo ────────────────────────────────────────────── */
+/* ── Logo ───────────────────────────────────────────────────── */
 
 .logo {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
+    display: block;
     text-decoration: none;
-    flex-shrink: 0;
+    transition: opacity 0.2s;
+    margin-bottom: 0.6rem;
+}
+
+.logo:hover {
+    opacity: 0.8;
 }
 
 .logo img {
-    height: 36px;
+    height: 180px;
     width: auto;
+    display: block;
 }
 
-.logo span {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.6rem;
-    font-weight: 600;
+/* ── Nav ────────────────────────────────────────────────────── */
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+}
+
+.main-nav a {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.2s;
+}
+
+.main-nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width 0.2s ease;
+}
+
+.main-nav a:hover {
+    color: var(--accent);
+}
+
+.main-nav a:hover::after {
+    width: 100%;
+}
+
+.nav-divider {
+    color: var(--border);
+    font-size: 0.75rem;
+    user-select: none;
+}
+
+.greeting {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 300;
     letter-spacing: 0.06em;
-    color: #fff;
-    line-height: 1;
+    color: var(--text-secondary);
+    font-style: italic;
 }

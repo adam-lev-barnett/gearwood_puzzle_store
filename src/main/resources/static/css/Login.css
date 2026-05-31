@@ -1,0 +1,15 @@
+.login-form-container {
+    align-items: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    align-items: center;
+    max-width: 50%;
+}

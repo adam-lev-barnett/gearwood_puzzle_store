@@ -109,122 +109,21 @@ h1 {
     color: var(--accent);
 }
 
-/* ── Product Table ──────────────────────────────────────────── */
+/* ── Product Grid ───────────────────────────────────────────── */
 
-#product-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    font-size: 0.875rem;
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    max-width: 75%;
+    margin: 0 auto;
 }
 
-#product-table thead {
-    background: var(--text-primary);
-}
-
-#product-table thead th {
-    font-family: 'Jost', sans-serif;
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.75);
-    padding: 1rem 1.25rem;
-    text-align: left;
-    white-space: nowrap;
-}
-
-#product-table thead th:first-child {
-    width: 90px;
-}
-
-#product-table tbody tr {
-    border-bottom: 1px solid var(--border);
-    transition: background 0.15s;
-}
-
-#product-table tbody tr:nth-child(even) {
-    background: var(--row-alt);
-}
-
-#product-table tbody tr:hover {
-    background: var(--row-hover);
-}
-
-#product-table tbody tr:last-child {
-    border-bottom: none;
-}
-
-#product-table tbody td {
-    padding: 1rem 1.25rem;
-    vertical-align: middle;
-    color: var(--text-primary);
-    line-height: 1.5;
-}
-
-/* Image cell */
-#product-table tbody td:first-child {
-    padding: 0.75rem 1.25rem;
-}
-
-#product-table tbody td img {
-    display: block;
-    width: 72px;
-    height: 72px;
-    object-fit: cover;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    background: var(--bg);
-}
-
-/* Product name link */
-#product-table tbody td a {
-    font-weight: 500;
-    color: var(--text-primary);
-    text-decoration: none;
-    transition: color 0.15s;
-}
-
-#product-table tbody td a:hover {
-    color: var(--accent);
-}
-
-/* Short description — muted and capped */
-#product-table tbody td:last-of-type,
-#product-table tbody td:nth-child(8) {
-    color: var(--text-secondary);
-    font-size: 0.82rem;
-    max-width: 260px;
-}
-
-/* Category / Difficulty / Active chips */
-#product-table tbody td:nth-child(4),
-#product-table tbody td:nth-child(5) {
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-}
-
-/* Price column */
-#product-table tbody td:nth-child(6) {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--accent);
-    white-space: nowrap;
-}
-
-/* Empty state row */
-#product-table tbody tr td[colspan] {
+.empty-state {
+    grid-column: 1 / -1;
     text-align: center;
-    padding: 3rem;
-    color: var(--text-secondary);
+    padding: 4rem 0;
     font-style: italic;
+    color: var(--text-secondary);
     letter-spacing: 0.03em;
 }

@@ -6,6 +6,7 @@
 <head>
     <title>Products</title>
     <link rel="stylesheet" th:href="@{/css/ProductCatalog.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/ProductCard.css}">
 </head>
 <body>
     <main layout:fragment="content">
@@ -48,41 +49,22 @@
                 <a th:href="@{/products/catalog}">Clear</a>
             </form>
 
-            <table id="product-table">
-                <thead>
-                    <tr>
-                        <th>Image</th>
-                        <th>Name</th>
-                        <th>Manufacturer</th>
-                        <th>Category</th>
-                        <th>Difficulty</th>
-                        <th>Price</th>
-                        <th>Description</th>
-                        <th sec:authorize="hasRole('ADMIN')">Active</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="product : ${products}">
-                        <td>
-                            <img th:src="${product.imgSrc() != null ? product.imgSrc() : '/product-images/default.jpg'}"
-                                 th:alt="${product.name()}">
-                        </td>
-                        <td>
-                            <a th:href="@{/products/{code}(code=${product.productCode()})}"
-                               th:text="${product.name()}"></a>
-                        </td>
-                        <td th:text="${product.manufacturer()}"></td>
-                        <td th:text="${product.category()}"></td>
-                        <td th:text="${product.difficulty()}"></td>
-                        <td th:text="${'$' + product.price()}"></td>
-                        <td th:text="${product.shortDescription()}"></td>
-                        <td sec:authorize="hasRole('ADMIN')" th:text="${product.isActive() ? 'Yes' : 'No'}"></td>
-                    </tr>
-                    <tr th:if="${#lists.isEmpty(products)}">
-                        <td colspan="8">No products found.</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="product-grid">
+                <th:block th:each="product : ${products}">
+                    <div th:replace="~{fragments/productCard ::
+                        productCard(
+                            ${product.productCode()},
+                            ${product.imgSrc()},
+                            ${product.name()},
+                            ${product.manufacturer()},
+                            ${product.category()},
+                            ${product.difficulty()},
+                            ${product.price()},
+                            ${product.shortDescription()})}">
+                    </div>
+                </th:block>
+                <p th:if="${#lists.isEmpty(products)}" class="empty-state">No products found.</p>
+            </div>
         </div>
     </main>
 </body>

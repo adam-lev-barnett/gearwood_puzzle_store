@@ -68,11 +68,9 @@ public class HomeController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") User user,
-                               @RequestParam("selectedRoles") List<String> roleNames,
-                               RedirectAttributes redirectAttributes) {
+    public String registerUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
         try {
-            userService.registerNewUser(user, roleNames);
+            userService.registerNewUser(user);
             redirectAttributes.addFlashAttribute("successMessage", "Registration successful.");
             return "redirect:/login";
         } catch (Exception e) {

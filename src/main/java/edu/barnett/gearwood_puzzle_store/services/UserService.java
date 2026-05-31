@@ -1,16 +1,17 @@
 package edu.barnett.gearwood_puzzle_store.services;
 
+import edu.barnett.gearwood_puzzle_store.dtos.UserDto;
 import edu.barnett.gearwood_puzzle_store.entities.User;
+import edu.barnett.gearwood_puzzle_store.utils.CurrentUserContext;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 
 import java.util.List;
 
 public interface UserService {
-    User register(String firstName, String lastName, String email, String password);
-    User findByEmail(String email);
-    void updateProfile(User user, String firstName, String lastName);
-    void changePassword(User user, String currentPassword, String newPassword);
+
+    @PreAuthorize("isAuthenticated()")
+    void changePassword(String currentPassword, String newPassword);
 
     @PreAuthorize("isAuthenticated()")
     void prepareDashboardModel(Model model);
@@ -21,14 +22,15 @@ public interface UserService {
     @PreAuthorize("isAuthenticated()")
     void prepareSettingsModel(Model model);
 
-    @PreAuthorize("isAuthenticated()")
-    void updateUserSettings(User updatedUser, String password, List<Long> addIds, List<Long> removeIds);
+    UserDto findUserByEmail(String email);
 
     List<User> getAllUsers();
 
-    User registerNewUser(User user, List<String> roleNames);
+    UserDto registerNewUser(User user);
 
-    void updateUser(User savedUser);
 
-    User getCurrentUser();
+    CurrentUserContext getCurrentUserContext();
+
+    @PreAuthorize("isAuthenticated()")
+    UserDto updateUser(User updateUser, String password);
 }

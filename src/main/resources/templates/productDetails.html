@@ -9,7 +9,71 @@
 </head>
 <body>
     <main layout:fragment="content">
-        <h1>Product Details</h1>
+        <div class="product-detail-container">
+
+            <div class="image-gallery">
+                <img id="main-image"
+                     th:src="${product.imgSrc() != null ? product.imgSrc() : '/product-images/default.jpg'}"
+                     th:alt="${product.name()}"
+                     class="main-image"/>
+
+                <div class="thumbnail-grid">
+                    <img th:each="img, imgStat : ${product.images()}"
+                         th:src="${img}"
+                         th:alt="${product.name()}"
+                         th:class="${imgStat.first} ? 'thumbnail active' : 'thumbnail'"
+                         onclick="setActiveImage(this)"/>
+                </div>
+            </div>
+
+            <div class="product-info">
+                <h1 th:text="${product.name()}"></h1>
+                <p class="product-short-description" th:text="${product.shortDescription()}"></p>
+
+                <p class="product-price" th:text="${'$' + product.price()}"></p>
+
+                <div class="product-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Category</span>
+                        <span class="meta-value" th:text="${product.category()}"></span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Difficulty</span>
+                        <span class="meta-value" th:text="${product.difficulty()}"></span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Pieces</span>
+                        <span class="meta-value" th:text="${product.numberOfPieces()}"></span>
+                    </div>
+                </div>
+
+                <p class="product-long-description" th:text="${product.longDescription()}"></p>
+                <form action="" method="post" class="add-to-cart">
+                    <div class="add-to-cart-row">
+                        <div class="quantity-stepper">
+                            <button type="button" class="qty-btn" onclick="adjustQty(-1)">−</button>
+                            <input id="quantity" name="quantity" type="number" min="1" max="99" value="1" step="1">
+                            <button type="button" class="qty-btn" onclick="adjustQty(1)">+</button>
+                        </div>
+                        <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <script>
+            function adjustQty(delta) {
+                const input = document.getElementById('quantity');
+                input.value = Math.min(99, Math.max(1, (parseInt(input.value) || 1) + delta));
+            }
+
+            function setActiveImage(el) {
+                document.getElementById('main-image').src = el.src;
+                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                el.classList.add('active');
+            }
+        </script>
     </main>
 </body>
 </html>

@@ -46,21 +46,15 @@ public class LogInController {
     @PostMapping("/settings")
     @PreAuthorize("isAuthenticated()")
     public String updateSettings(@ModelAttribute("user") User updatedUser,
-                                 @RequestParam(required = false) String password,
-                                 @RequestParam(required = false) List<Long> addIds,
-                                 @RequestParam(required = false) List<Long> removeIds,
+                                 @RequestParam String password,
                                  RedirectAttributes redirectAttributes) {
         try {
-            User actualUser = userService.getCurrentUser();
-            actualUser.setFirstName(updatedUser.getFirstName());
-            actualUser.setLastName(updatedUser.getLastName());
-            actualUser.setEmail(updatedUser.getEmail());
-            userService.updateUserSettings(actualUser, password, addIds, removeIds);
+            userService.updateUser(updatedUser, password);
             redirectAttributes.addFlashAttribute("successMessage", "Account updated successfully.");
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to update account: " + ex.getMessage());
         }
-        return "redirect:/settings";
+        return "redirect:/home";
     }
 
     @GetMapping("/admin/users")

@@ -1,9 +1,12 @@
 package edu.barnett.gearwood_puzzle_store.services;
 
+import edu.barnett.gearwood_puzzle_store.dtos.UserDto;
+import edu.barnett.gearwood_puzzle_store.entities.Role;
 import edu.barnett.gearwood_puzzle_store.entities.User;
 import edu.barnett.gearwood_puzzle_store.repositories.RoleRepository;
 import edu.barnett.gearwood_puzzle_store.repositories.UserRepository;
 import edu.barnett.gearwood_puzzle_store.utils.CurrentUserContext;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,7 +30,7 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    private CurrentUserContext getCurrentUserContext() {
+    public CurrentUserContext getCurrentUserContext() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         User user = userRepository.findByEmail(email)
@@ -35,24 +38,18 @@ public class UserServiceImpl implements UserService {
         return new CurrentUserContext(user, auth);
     }
 
+
     @Override
-    public User register(String firstName, String lastName, String email, String password) {
-        return null;
+    public UserDto findUserByEmail(String email) {
+        return new UserDto(userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email)));
     }
 
     @Override
-    public User findByEmail(String email) {
-        return null;
-    }
-
-    @Override
-    public void updateProfile(User user, String firstName, String lastName) {
-
-    }
-
-    @Override
-    public void changePassword(User user, String currentPassword, String newPassword) {
-
+    public void changePassword(String currentPassword, String newPassword) {
+        User currentUser = this.getCurrentUserContext().user();
+        currentUser.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(currentUser);
     }
 
     @Override
@@ -73,13 +70,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserSettings(User updatedUser, String password, List<Long> addIds, List<Long> removeIds) {
-
-    }
-
-    @Override
-    public User registerNewUser(User user, List<String> roleNames) {
-        return user;
+    public UserDto registerNewUser(User user) {
+        Role customerRole = roleRepository.findByName("CUSTOMER")
+                .orElseThrow(() -> new RuntimeException("CUSTOMER role not found"));
+        user.addRole(customerRole);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User newUser =  userRepository.save(user);
+        return new UserDto(newUser);
     }
 
     @Override
@@ -87,17 +84,15 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-
     @Override
-    public void updateUser(User savedUser) {
-        userRepository.save(savedUser);
+    public UserDto updateUser(User updateUser, String password) {
+        User currentUser = this.getCurrentUserContext().user();
+        if (!currentUser.getPassword().equals(password)) throw new BadCredentialsException("Could not update user information. Wrong password");
+        // Last name or first name may be null or empty if user is only updating one. So no error thrown.
+        if (updateUser.getFirstName() != null && !updateUser.getFirstName().isEmpty()) currentUser.setFirstName(updateUser.getFirstName());
+        if (updateUser.getLastName() != null && !updateUser.getLastName().isEmpty()) currentUser.setLastName(updateUser.getLastName());
+        User updatedUser = userRepository.save(currentUser);
+        return new UserDto(updatedUser);
     }
 
-    @Override
-    public User getCurrentUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-    }
 }

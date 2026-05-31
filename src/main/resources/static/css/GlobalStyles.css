@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Jost:wght@300;400;500&display=swap');
 
 :root {
-    --bg:             #F8F4EF;
+    --bg: #ffffff;
     --surface:        #FFFFFF;
     --text-primary:   #1C1410;
     --text-secondary: #7A6352;

@@ -4,19 +4,28 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/fragments/ProductCard.css}">
     <title></title>
 </head>
 <body>
-<div th:fragment="productCard (productCode, productImg, productName, manufacturer, category, difficulty, price, description)" class="product-card">
-    <a th:src="@{/products/{code}(code=${productCode})}">
-    <img th:src="${productImg}" alt="product image" />
-    <h3 th:text="${productName}"></h3>
-    <p th:text="${description}">product description</p>
-    <p><b>Price: </b> $<span class="price" th:text="${price}">price</span></p>
-    <p><b>Manufacturer: </b> <span th:text="${manufacturer}">manufacturer</span></p>
-    <p><b>Category: </b> <span th:text="${category}">category</span> |
-        <b>Difficulty: </b><span th:text="${difficulty}">difficulty</span></p>
+
+<div th:fragment="productCard(productCode, productImg, productName, manufacturer, category, difficulty, price, description)"
+     class="product-card">
+    <a th:href="@{/products/{code}(code=${productCode})}">
+        <img class="card-image"
+             th:src="${productImg != null ? productImg : '/product-images/default.jpg'}"
+             th:alt="${productName}"/>
+        <div class="card-body">
+            <div class="card-tags">
+                <span class="card-tag" th:text="${category}"></span>
+                <span class="card-tag" th:text="${difficulty}"></span>
+            </div>
+            <h3 th:text="${productName}"></h3>
+            <p class="card-description" th:text="${description}"></p>
+            <div class="card-footer">
+                <span class="card-price" th:text="${'$' + price}"></span>
+                <span class="card-manufacturer" th:text="${manufacturer}"></span>
+            </div>
+        </div>
     </a>
 </div>
 

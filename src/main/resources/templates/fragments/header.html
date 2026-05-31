@@ -10,18 +10,15 @@
 
     <header th:fragment="main-header" class="main-header">
 
-        <nav class="nav-left">
+        <a th:href="@{/home}" class="logo">
+            <img src="/BusinessImages/Logo.png" alt="Gearwood Logo" />
+        </a>
+
+        <nav class="main-nav">
             <a th:href="@{/home}">Home</a>
             <a th:href="@{/products/catalog}">Products</a>
             <a th:href="@{/cart}" sec:authorize="isAuthenticated()">Cart</a>
-        </nav>
-
-        <a th:href="@{/home}" class="logo">
-            <img src="/BusinessImages/Logo.png" alt="Gearwood Logo" />
-            <span>Gearwood</span>
-        </a>
-
-        <nav class="nav-right">
+            <span class="nav-divider">|</span>
             <span sec:authorize="isAuthenticated()" class="greeting"
                   th:text="'Hello, ' + ${session.firstName}"></span>
             <a th:href="@{/account}" sec:authorize="isAuthenticated()">Account</a>
