@@ -11,6 +11,9 @@
 <body>
     <main layout:fragment="content">
 
+        <!-- Flash message, e.g. "You're already logged in!" set by HomeController -->
+        <p class="info-banner" th:if="${infoMessage}" th:text="${infoMessage}"></p>
+
         <section class="hero">
             <p class="hero-eyebrow">Handcrafted Wooden Puzzle Store</p>
             <h1>Beautiful puzzles built to challenge, display, and enjoy.</h1>

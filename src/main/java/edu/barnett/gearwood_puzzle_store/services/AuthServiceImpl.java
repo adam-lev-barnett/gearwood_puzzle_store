@@ -1,6 +1,7 @@
 package edu.barnett.gearwood_puzzle_store.services;
 
 import edu.barnett.gearwood_puzzle_store.dtos.JwtResponse;
+import edu.barnett.gearwood_puzzle_store.dtos.LoginRequestDto;
 import edu.barnett.gearwood_puzzle_store.entities.User;
 import edu.barnett.gearwood_puzzle_store.jwt.JwtUtil;
 import edu.barnett.gearwood_puzzle_store.repositories.UserRepository;
@@ -31,10 +32,10 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public JwtResponse authenticateAndGenerateToken(User user) {
+    public JwtResponse authenticateAndGenerateToken(LoginRequestDto user) {
         try {
             Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+                    new UsernamePasswordAuthenticationToken(user.email(), user.password())
             );
             SecurityContextHolder.getContext().setAuthentication(auth);
 
@@ -48,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Cookie loginAndCreateJwtCookie(User user) throws BadCredentialsException {
+    public Cookie loginAndCreateJwtCookie(LoginRequestDto user) throws BadCredentialsException {
         JwtResponse jwtResponse = authenticateAndGenerateToken(user);
 
         Cookie jwtCookie = new Cookie("jwt", jwtResponse.getToken());

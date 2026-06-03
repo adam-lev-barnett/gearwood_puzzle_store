@@ -1,5 +1,6 @@
 package edu.barnett.gearwood_puzzle_store.controllers;
 
+import edu.barnett.gearwood_puzzle_store.dtos.LoginRequestDto;
 import edu.barnett.gearwood_puzzle_store.entities.User;
 import edu.barnett.gearwood_puzzle_store.services.AuthService;
 import edu.barnett.gearwood_puzzle_store.services.UserService;
@@ -7,7 +8,9 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,20 +34,30 @@ public class HomeController {
         return "home";
     }
 
+    // Logged-in users are bounced home with a message instead of seeing the login form
     @GetMapping("/login")
-    public String showLoginForm(Model model) {
-        model.addAttribute("user", new User());
+    public String loadLoginForm(Authentication auth, RedirectAttributes redirectAttributes) {
+        if (isLoggedIn(auth)) {
+            redirectAttributes.addFlashAttribute("infoMessage", "You're already logged in!");
+            return "redirect:/home";
+        }
         return "login";
     }
 
     @PostMapping("/login")
-    public String processLogin(@ModelAttribute("user") User user,
-                               HttpServletResponse response,
-                               HttpSession session,
-                               Model model) {
+    public String loginUser(@ModelAttribute("user") LoginRequestDto user,
+                                HttpServletResponse response,
+                                HttpSession session,
+                                Authentication auth,
+                                RedirectAttributes redirectAttributes,
+                                Model model) {
+        // Reject a login attempt from someone already authenticated
+        if (isLoggedIn(auth)) {
+            redirectAttributes.addFlashAttribute("infoMessage", "You're already logged in!");
+            return "redirect:/home";
+        }
         try {
-            Cookie jwtCookie = authService.loginAndCreateJwtCookie(user);
-            response.addCookie(jwtCookie);
+            userService.loginUser(user, response);
             session.setAttribute("firstName", authService.getCurrentUser().getFirstName());
             return "redirect:/home";
         } catch (BadCredentialsException e) {
@@ -53,22 +66,27 @@ public class HomeController {
         }
     }
 
-    @GetMapping("/logout")
-    @PreAuthorize("isAuthenticated()")
-    public String logout(HttpServletResponse response, HttpSession session) {
-        authService.clearJwtCookie(response);
-        session.invalidate();
-        return "redirect:/login";
-    }
+    // Logout is handled by Spring Security's LogoutFilter (see SecurityConfig):
+    // GET /logout clears the jwt cookie + session and redirects to /login?logout.
 
     @GetMapping("/register")
-    public String showRegisterForm(Model model) {
+    public String showRegisterForm(Authentication auth, Model model, RedirectAttributes redirectAttributes) {
+        if (isLoggedIn(auth)) {
+            redirectAttributes.addFlashAttribute("infoMessage", "You're already logged in!");
+            return "redirect:/home";
+        }
         model.addAttribute("user", new User());
         return "registration";
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
+    public String registerUser(@ModelAttribute("user") User user,
+                               Authentication auth,
+                               RedirectAttributes redirectAttributes) {
+        if (isLoggedIn(auth)) {
+            redirectAttributes.addFlashAttribute("infoMessage", "You're already logged in!");
+            return "redirect:/home";
+        }
         try {
             userService.registerNewUser(user);
             redirectAttributes.addFlashAttribute("successMessage", "Registration successful.");
@@ -77,5 +95,16 @@ public class HomeController {
             redirectAttributes.addFlashAttribute("errorMessage", "Registration failed: " + e.getMessage());
             return "redirect:/register";
         }
+    }
+
+    /**
+     * True only for a genuinely logged-in user. Spring uses an
+     * AnonymousAuthenticationToken for not-logged-in requests, and its
+     * isAuthenticated() returns true — so we must exclude it explicitly.
+     */
+    private boolean isLoggedIn(Authentication auth) {
+        return auth != null
+                && auth.isAuthenticated()
+                && !(auth instanceof AnonymousAuthenticationToken);
     }
 }

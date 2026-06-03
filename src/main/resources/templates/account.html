@@ -19,7 +19,8 @@
                     <p><span class="label">First Name:</span> <span th:text="${user?.firstName()}"></span></p>
                     <p><span class="label">Last Name:</span> <span th:text="${user?.lastName()}"></span></p>
                     <p><span class="label">Email:</span> <span th:text="${user?.email()}"></span></p>
-                    <p><span class="label">Role:</span> <span th:text="${user?.roles()}"></span></p>
+                    <p><span class="label">Role:</span>
+                        <span th:each="roleName : ${user.roleNames()}" th:text="${roleName}"></span></p>
                 </section>
 
                 <section class="account-actions card">
