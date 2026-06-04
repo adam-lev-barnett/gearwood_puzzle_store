@@ -36,15 +36,12 @@ public class User {
     // Requirements don't indicate multiple roles, but previous examples have. Leaving this option available
     private final Set<Role> roles = new HashSet<>();
 
-    /** Having a list of CartItems in a join table represents a user's shopping cart, which should persist even if the user ends the session
-     * Calling it "cart" instead of "cartItems" is clearer for the dev*/
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "user_cart",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "cartItem_id")
-    )
-    private final List<CartItem> cart = new ArrayList<>();
+    // A user's cart is modeled as CartItem rows that reference this user (see CartItem.user).
+    // Cart logic lives in CartService, which queries/mutates those rows via CartItemRepository,
+    // so there is intentionally no cart collection mapped here.
+
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
+    private final List<OrderData> orderData = new ArrayList<>();
 
     public User() {}
 

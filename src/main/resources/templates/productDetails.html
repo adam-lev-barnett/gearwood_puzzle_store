@@ -48,7 +48,8 @@
                 </div>
 
                 <p class="product-long-description" th:text="${product.longDescription()}"></p>
-                <form action="" method="post" class="add-to-cart">
+                <form th:action="@{/cart/add}" method="post" class="add-to-cart">
+                    <input type="hidden" name="productCode" th:value="${product.productCode()}">
                     <div class="add-to-cart-row">
                         <div class="quantity-stepper">
                             <button type="button" class="qty-btn" onclick="adjustQty(-1)">−</button>

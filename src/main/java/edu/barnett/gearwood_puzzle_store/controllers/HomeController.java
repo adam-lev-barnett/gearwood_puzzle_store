@@ -3,6 +3,7 @@ package edu.barnett.gearwood_puzzle_store.controllers;
 import edu.barnett.gearwood_puzzle_store.dtos.LoginRequestDto;
 import edu.barnett.gearwood_puzzle_store.entities.User;
 import edu.barnett.gearwood_puzzle_store.services.AuthService;
+import edu.barnett.gearwood_puzzle_store.services.CartService;
 import edu.barnett.gearwood_puzzle_store.services.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,10 +24,12 @@ public class HomeController {
 
     private final AuthService authService;
     private final UserService userService;
+    private final CartService cartService;
 
-    public HomeController(AuthService authService, UserService userService) {
+    public HomeController(AuthService authService, UserService userService, CartService cartService) {
         this.authService = authService;
         this.userService = userService;
+        this.cartService = cartService;
     }
 
     @GetMapping({"/", "/home"})
@@ -58,7 +61,8 @@ public class HomeController {
         }
         try {
             userService.loginUser(user, response);
-            session.setAttribute("firstName", authService.getCurrentUser().getFirstName());
+            session.setAttribute("user", authService.getCurrentUser());
+            session.setAttribute("cartCount", userService.getUserCartSize());
             return "redirect:/home";
         } catch (BadCredentialsException e) {
             model.addAttribute("error", "Invalid username or password");

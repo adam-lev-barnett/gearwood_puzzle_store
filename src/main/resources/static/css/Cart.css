@@ -1,0 +1,359 @@
+/* ── Container ──────────────────────────────────────────────── */
+
+.cart-container {
+    max-width: 1200px;
+    margin: 2.5rem auto 4rem;
+    padding: 0 2rem;
+}
+
+.cart-container > h1 {
+    text-align: left;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+/* ── Layout: items + summary sidebar ────────────────────────── */
+
+.cart-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 2.5rem;
+    align-items: start;
+}
+
+/* Shared card surface (cart items + order summary) */
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+/* ── Cart items ─────────────────────────────────────────────── */
+
+.cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.cart-item {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    animation: cardReveal 0.35s ease both;
+}
+
+.cart-item-image {
+    width: 150px;
+    height: 150px;
+    flex-shrink: 0;
+    object-fit: scale-down;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.cart-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.cart-item-info h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 0.35rem;
+}
+
+.cart-item-info p {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.cart-item-info .label {
+    font-size: 0.63rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-right: 0.35rem;
+}
+
+/* The line total reads as the price emphasis, in serif/accent */
+.cart-item-info p:last-of-type {
+    margin-top: 0.15rem;
+}
+
+.cart-item-info p:last-of-type span:last-child {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* ── Update quantity form ───────────────────────────────────── */
+
+.cart-item-update {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.6rem;
+    margin-top: 0.85rem;
+}
+
+.cart-item-update label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.63rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.cart-item-update input[type="number"] {
+    width: 72px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.45rem 0.6rem;
+    -moz-appearance: textfield;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.cart-item-update input[type="number"]::-webkit-outer-spin-button,
+.cart-item-update input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.cart-item-update input[type="number"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(196, 130, 42, 0.12);
+}
+
+.cart-item-update button {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.cart-item-update button:hover {
+    background: var(--accent-hover);
+}
+
+.cart-item-update button:active {
+    transform: scale(0.98);
+}
+
+/* ── Remove + view product ──────────────────────────────────── */
+
+.remove-button {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.45rem 1rem;
+    margin-top: 0.6rem;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.remove-button:hover {
+    color: #A8443A;
+    border-color: #A8443A;
+}
+
+.cart-item-info > a {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    margin-top: 0.75rem;
+    width: fit-content;
+    transition: color 0.2s;
+}
+
+.cart-item-info > a:hover {
+    color: var(--accent);
+}
+
+/* ── Empty state ────────────────────────────────────────────── */
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 0;
+    font-style: italic;
+    color: var(--text-secondary);
+    letter-spacing: 0.03em;
+}
+
+/* ── Order summary sidebar ──────────────────────────────────── */
+
+.order-summary {
+    position: sticky;
+    top: 2rem;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.order-summary h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    padding: 0.55rem 0;
+}
+
+.summary-row span:last-child {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.free-shipping-note {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+    padding-bottom: 0.4rem;
+}
+
+.summary-row.total {
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.summary-row.total span {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.summary-row.total span:last-child {
+    color: var(--accent);
+}
+
+/* ── Summary actions ────────────────────────────────────────── */
+
+.checkout-button {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--accent);
+    border-radius: 6px;
+    padding: 0.9rem 1rem;
+    margin-top: 0.75rem;
+    box-shadow: var(--shadow);
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+.checkout-button:hover {
+    background: var(--accent-hover);
+    box-shadow: 0 8px 24px rgba(196, 130, 42, 0.22);
+}
+
+.checkout-button:active {
+    transform: scale(0.98);
+}
+
+.continue-link {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.8rem 1rem;
+    margin-top: 1.5rem;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.continue-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+
+@media (max-width: 860px) {
+    .cart-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .order-summary {
+        position: static;
+    }
+}
+
+@media (max-width: 520px) {
+    .cart-item {
+        flex-direction: column;
+    }
+
+    .cart-item-image {
+        width: 100%;
+        height: 200px;
+    }
+}

@@ -39,6 +39,7 @@ public class ProductController {
         boolean isAdmin = auth != null && auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
+        // If all of the fields are empty, there's no search/filtering
         boolean isSearch = (keyword != null && !keyword.isBlank())
                 || category != null || difficulty != null
                 || minPrice != null || maxPrice != null;

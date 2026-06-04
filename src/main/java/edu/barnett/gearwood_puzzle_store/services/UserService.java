@@ -24,4 +24,8 @@ public interface UserService {
 
     @PreAuthorize("isAuthenticated()")
     void updateUser(User updateUser, String password);
+
+    int getUserCartSize();
+
+
 }

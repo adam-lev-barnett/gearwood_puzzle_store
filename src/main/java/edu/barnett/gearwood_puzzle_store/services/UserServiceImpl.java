@@ -3,6 +3,7 @@ package edu.barnett.gearwood_puzzle_store.services;
 import edu.barnett.gearwood_puzzle_store.dtos.LoginRequestDto;
 import edu.barnett.gearwood_puzzle_store.dtos.RegistrationRequestDto;
 import edu.barnett.gearwood_puzzle_store.dtos.UserDto;
+import edu.barnett.gearwood_puzzle_store.entities.CartItem;
 import edu.barnett.gearwood_puzzle_store.entities.Role;
 import edu.barnett.gearwood_puzzle_store.entities.User;
 import edu.barnett.gearwood_puzzle_store.exceptions.AlreadyExistsException;
@@ -16,10 +17,12 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 
 @Service
@@ -29,12 +32,14 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
+    private final CartService cartService;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthService authService) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthService authService, CartService cartService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.authService = authService;
+        this.cartService = cartService;
     }
 
     @Override
@@ -106,5 +111,12 @@ public class UserServiceImpl implements UserService {
         if (updateUser.getLastName() != null && !updateUser.getLastName().isEmpty()) currentUser.setLastName(updateUser.getLastName());
         userRepository.save(currentUser);
     }
+
+    @Override
+    public int getUserCartSize() {
+        return cartService.getCartItems().size();
+    }
+
+
 
 }
