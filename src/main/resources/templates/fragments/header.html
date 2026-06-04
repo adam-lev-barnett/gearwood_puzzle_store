@@ -18,10 +18,10 @@
         <nav class="main-nav">
             <a th:href="@{/home}">Home</a>
             <a th:href="@{/products/catalog}">Products</a>
-            <a th:href="@{/cart}" sec:authorize="isAuthenticated()">Cart 🛒</a><span th:text="${session.cartCount}" id="cart-count"></span>
+            <a th:href="@{/cart}" sec:authorize="isAuthenticated()">Cart 🛒</a><span th:text="${cartCount}" id="cart-count"></span>
             <span class="nav-divider">|</span>
             <span sec:authorize="isAuthenticated()" class="greeting"
-                  th:text="'Hello, ' + ${session.firstName}"></span>
+                  th:text="'Hello, ' + ${firstName}"></span>
             <a th:href="@{/account}" sec:authorize="isAuthenticated()">Account</a>
             <a th:href="@{/logout}" sec:authorize="isAuthenticated()">Logout</a>
             <a th:href="@{/login}" sec:authorize="isAnonymous()">Login</a>

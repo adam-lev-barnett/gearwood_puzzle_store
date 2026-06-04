@@ -7,7 +7,6 @@ import edu.barnett.gearwood_puzzle_store.services.CartService;
 import edu.barnett.gearwood_puzzle_store.services.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -50,7 +49,6 @@ public class HomeController {
     @PostMapping("/login")
     public String loginUser(@ModelAttribute("user") LoginRequestDto user,
                                 HttpServletResponse response,
-                                HttpSession session,
                                 Authentication auth,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
@@ -61,8 +59,6 @@ public class HomeController {
         }
         try {
             userService.loginUser(user, response);
-            session.setAttribute("user", authService.getCurrentUser());
-            session.setAttribute("cartCount", userService.getUserCartSize());
             return "redirect:/home";
         } catch (BadCredentialsException e) {
             model.addAttribute("error", "Invalid username or password");
