@@ -1,12 +1,14 @@
 package edu.barnett.gearwood_puzzle_store.controllers;
 
 import edu.barnett.gearwood_puzzle_store.dtos.LoginRequestDto;
+import edu.barnett.gearwood_puzzle_store.dtos.PendingCartAdd;
 import edu.barnett.gearwood_puzzle_store.entities.User;
 import edu.barnett.gearwood_puzzle_store.services.AuthService;
 import edu.barnett.gearwood_puzzle_store.services.CartService;
 import edu.barnett.gearwood_puzzle_store.services.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -49,6 +51,7 @@ public class HomeController {
     @PostMapping("/login")
     public String loginUser(@ModelAttribute("user") LoginRequestDto user,
                                 HttpServletResponse response,
+                                HttpSession session,
                                 Authentication auth,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
@@ -58,7 +61,20 @@ public class HomeController {
             return "redirect:/home";
         }
         try {
+            // Existing service call: authenticates and sets the jwt cookie. It also
+            // populates the SecurityContext, so the user is authenticated for the
+            // rest of this request — which is what lets the cart add below work.
             userService.loginUser(user, response);
+
+            // If they tried to add an item while anonymous, finish it now and drop
+            // them on the cart. The pending add lived in the session only for this hop.
+            PendingCartAdd pending = (PendingCartAdd) session.getAttribute("pendingCartAdd");
+            if (pending != null) {
+                session.removeAttribute("pendingCartAdd");
+                cartService.addToCart(pending.productCode(), pending.quantity());
+                redirectAttributes.addFlashAttribute("successMessage", "Item added to cart.");
+                return "redirect:/cart";
+            }
             return "redirect:/home";
         } catch (BadCredentialsException e) {
             model.addAttribute("error", "Invalid username or password");

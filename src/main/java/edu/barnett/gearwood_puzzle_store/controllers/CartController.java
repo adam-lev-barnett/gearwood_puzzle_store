@@ -1,9 +1,12 @@
 package edu.barnett.gearwood_puzzle_store.controllers;
 
+import edu.barnett.gearwood_puzzle_store.dtos.PendingCartAdd;
 import edu.barnett.gearwood_puzzle_store.services.CartService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +36,23 @@ public class CartController {
         return "cart";
     }
 
+    // permitAll() overrides the class-level isAuthenticated() so anonymous shoppers
+    // can reach this method — we handle their auth state ourselves below.
     @PostMapping("/add")
+    @PreAuthorize("permitAll()")
     public String addToCart(@RequestParam String productCode,
                             @RequestParam(defaultValue = "1") int quantity,
-                            Authentication auth,
+                            @AuthenticationPrincipal UserDetails user,
+                            HttpSession session,
                             RedirectAttributes redirectAttributes) {
+        // Anonymous shopper: the principal isn't a UserDetails, so it resolves to null.
+        // Stash the intended item and send them to log in; HomeController replays it
+        // from the session right after a successful login.
+        if (user == null) {
+            session.setAttribute("pendingCartAdd", new PendingCartAdd(productCode, quantity));
+            redirectAttributes.addFlashAttribute("infoMessage", "Please log in to add items to your cart.");
+            return "redirect:/login";
+        }
         try {
             cartService.addToCart(productCode, quantity);
             redirectAttributes.addFlashAttribute("successMessage", "Item added to cart.");

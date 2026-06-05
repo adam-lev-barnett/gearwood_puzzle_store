@@ -5,7 +5,6 @@ import edu.barnett.gearwood_puzzle_store.enums.OrderStatus;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public record OrderSummaryDto(
         String orderNumber,
@@ -22,10 +21,10 @@ public record OrderSummaryDto(
                 orderData.getOrderStatus(),
                 orderData.getTotalAmount(),
                 orderData.getTransactionID(),
-                orderData.getShippingInfo(),
+                new ShippingInfoDto(orderData.getShippingInfo()),
                 orderData.getOrderedItems()
                         .stream()
-                        .map(orderItem -> new OrderItemDto(orderItem))
+                        .map(OrderItemDto::new)
                         .toList()
                         );
     }
