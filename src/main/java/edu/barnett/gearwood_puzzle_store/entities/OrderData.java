@@ -1,5 +1,6 @@
 package edu.barnett.gearwood_puzzle_store.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.barnett.gearwood_puzzle_store.enums.OrderStatus;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ public class OrderData {
     @Column(nullable = false, unique = true)
     private String orderNumber;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

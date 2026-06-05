@@ -78,3 +78,22 @@
     color: var(--text-secondary);
     font-style: italic;
 }
+
+/* Keeps the Cart link and its count as ONE nav item, so the .main-nav
+   gap applies around the pair instead of between them. */
+.cart-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+#cart-count {
+    font-size: x-small;
+    line-height: 1;
+    background-color: #d38936;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    min-width: 1.6em;
+    padding: 0.15em 0.4em;
+    text-align: center;
+}
