@@ -43,6 +43,7 @@ public class OrderData {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
+    @Column(nullable = false)
     private String transactionID;
 
     @Embedded
@@ -103,4 +104,14 @@ public class OrderData {
 
     public List<OrderItem> getOrderedItems() { return orderedItems; }
     public void setOrderedItems(List<OrderItem> orderedItems) { this.orderedItems = orderedItems; }
+
+    /**
+     * Adds a line to this order and keeps both sides of the relationship in sync.
+     * Because OrderItem owns the FK, the parent OrderData must exist first — build
+     * the order, then attach items through this helper.
+     */
+    public void addOrderItem(OrderItem item) {
+        item.setOrder(this);
+        orderedItems.add(item);
+    }
 }
