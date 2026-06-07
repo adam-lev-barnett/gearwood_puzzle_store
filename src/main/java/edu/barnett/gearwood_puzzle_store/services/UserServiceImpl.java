@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUserInfo(User updateUser, String password) {
         User currentUser = authService.getCurrentUser();
-        if (passwordEncoder.matches(password, currentUser.getPassword())) throw new BadCredentialsException("Could not update user information. Wrong password");
+        if (!passwordEncoder.matches(password, currentUser.getPassword())) throw new BadCredentialsException("Could not update user information. Wrong password");
         // Last name or first name may be null or empty if user is only updating one. So no error thrown.
         if (updateUser.getFirstName() != null && !updateUser.getFirstName().isEmpty()) currentUser.setFirstName(updateUser.getFirstName());
         if (updateUser.getLastName() != null && !updateUser.getLastName().isEmpty()) currentUser.setLastName(updateUser.getLastName());

@@ -14,7 +14,8 @@
             <h1>Edit Profile</h1>
 
             <!-- ${user} : UserDto used to prefill values. Email is intentionally read-only (spec 3.1). -->
-            <p class="form-error" th:if="${error}" th:text="${error}"></p>
+            <p class="success-message" th:if="${successMessage}" th:text="${successMessage}"></p>
+            <p class="error-message" th:if="${errorMessage}" th:text="${errorMessage}"></p>
 
             <form class="edit-profile-form form-card" th:action="@{/account/edit}" method="post">
                 <label for="firstName">First Name</label>
@@ -29,7 +30,7 @@
                 </p>
 
                 <label for="confirm-password">Confirm password</label>
-                <input type="password" id="confirm-password" name="confirmPassword" required>
+                <input type="password" id="confirm-password" name="password" required>
 
                 <div class="form-actions">
                     <button type="submit" class="submit-button">Save Changes</button>

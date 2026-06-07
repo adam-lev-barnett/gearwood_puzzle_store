@@ -55,7 +55,7 @@ public class UserController {
     @GetMapping("/edit")
     @PreAuthorize("isAuthenticated()")
     public String showEditForm(Authentication auth, Model model) {
-        // Same UserDto the account page uses — prefills firstName/lastName/email in the form.
+        // Same UserDto the account page uses. Prefills firstName/lastName/email in the form.
         model.addAttribute("user", userService.findUserByEmail(auth.getName()));
         return "editAccount";
     }
@@ -63,16 +63,23 @@ public class UserController {
     @PostMapping("/edit")
     @PreAuthorize("isAuthenticated()")
     public String editAccount(@ModelAttribute("user") User updatedUser,
-                              @RequestParam String password,
+                              @RequestParam(required = false) String password,
                               RedirectAttributes redirectAttributes,
                               Model model) {
+        // Guard a blank/missing confirmation password ourselves so it shows a friendly
+        // message instead of a 400 error page.
+        if (password == null || password.isBlank()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Please enter your password to confirm changes.");
+            return "redirect:/account/edit";
+        }
         try {
             userService.updateUserInfo(updatedUser, password);
             redirectAttributes.addFlashAttribute("successMessage", "Account updated successfully.");
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to update account: " + ex.getMessage());
+            return "redirect:/account/edit";
         }
-        return "redirect:/account";
+        return  "redirect:/account/edit";
     }
 
     @GetMapping("/password")
