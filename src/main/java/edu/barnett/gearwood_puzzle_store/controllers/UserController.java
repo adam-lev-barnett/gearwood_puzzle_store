@@ -64,10 +64,8 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     public String editAccount(@ModelAttribute("user") User updatedUser,
                               @RequestParam(required = false) String password,
-                              RedirectAttributes redirectAttributes,
-                              Model model) {
-        // Guard a blank/missing confirmation password ourselves so it shows a friendly
-        // message instead of a 400 error page.
+                              RedirectAttributes redirectAttributes) {
+
         if (password == null || password.isBlank()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Please enter your password to confirm changes.");
             return "redirect:/account/edit";
