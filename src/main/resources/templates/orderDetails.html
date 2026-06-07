@@ -19,7 +19,7 @@
                 <section class="order-information card">
                     <h2>Order Information</h2>
                     <p><span class="label">Order #:</span> <span th:text="${order?.orderNumber()}"></span></p>
-                    <p><span class="label">Date:</span> <span th:text="${order?.orderDateTime()}"></span></p>
+                    <p><span class="label">Date:</span> <span th:text="${order.formattedDate()}"></span></p>
                     <p><span class="label">Status:</span> <span th:text="${order?.orderStatus()}"></span></p>
                     <p><span class="label">Transaction ID:</span> <span th:text="${order?.transactionId()}"></span></p>
                     <p><span class="label">Total:</span> <span th:text="${'$' + order?.totalAmount()}"></span></p>

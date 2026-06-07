@@ -8,9 +8,9 @@
 </head>
 <body>
     <main layout:fragment="content">
-        <div class="login-form-container">
+        <div class="form-container">
             <h1>Login</h1>
-            <form class="login-form" th:action="@{/login}" method="post">
+            <form class="login-form form-card" th:action="@{/login}" method="post">
                 <div class="error-message" th:if="${error}" th:text="${error}"></div>
                 <label for="email">Enter your email: </label>
                 <input type="email" name="email" id="email" required />

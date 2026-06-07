@@ -28,7 +28,9 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
                 user.getEmail(),
                 user.getPassword(),
                 user.getRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority(role.getName()))
+                        // Spring convention: hasRole('ADMIN') / @PreAuthorize check for the authority
+                        // "ROLE_ADMIN". Roles are stored as plain names ("ADMIN"), so prefix here.
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
                         .collect(Collectors.toList())
         );
     }

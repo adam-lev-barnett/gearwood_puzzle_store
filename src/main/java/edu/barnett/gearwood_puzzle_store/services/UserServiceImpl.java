@@ -3,8 +3,6 @@ package edu.barnett.gearwood_puzzle_store.services;
 import edu.barnett.gearwood_puzzle_store.dtos.LoginRequestDto;
 import edu.barnett.gearwood_puzzle_store.dtos.RegistrationRequestDto;
 import edu.barnett.gearwood_puzzle_store.dtos.UserDto;
-import edu.barnett.gearwood_puzzle_store.entities.CartItem;
-import edu.barnett.gearwood_puzzle_store.entities.Role;
 import edu.barnett.gearwood_puzzle_store.entities.User;
 import edu.barnett.gearwood_puzzle_store.exceptions.AlreadyExistsException;
 import edu.barnett.gearwood_puzzle_store.exceptions.BadParameterException;
@@ -13,16 +11,12 @@ import edu.barnett.gearwood_puzzle_store.repositories.RoleRepository;
 import edu.barnett.gearwood_puzzle_store.repositories.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service
@@ -61,9 +55,9 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
 
-        // Automatically assign them the role of user - they shouldn't be able to choose their roles
-        user.addRole(roleRepository.findByName("USER").orElseThrow(
-                () -> new NotFoundException("USER role not found")
+        // Automatically assign them the customer role - they shouldn't be able to choose their roles
+        user.addRole(roleRepository.findByName("CUSTOMER").orElseThrow(
+                () -> new NotFoundException("CUSTOMER role not found")
         ));
 
         userRepository.save(user);
@@ -83,32 +77,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
     @Transactional
-    public void changePassword(String currentPassword, String newPassword) {
+    public void updateUserInfo(User updateUser, String password) {
         User currentUser = authService.getCurrentUser();
-        currentUser.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(currentUser);
-    }
-
-    @Override
-    @Transactional
-    public void registerNewUser(User user) {
-        Role customerRole = roleRepository.findByName("CUSTOMER")
-                .orElseThrow(() -> new RuntimeException("CUSTOMER role not found"));
-        user.addRole(customerRole);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-    }
-
-    @Override
-    @Transactional
-    public void updateUser(User updateUser, String password) {
-        User currentUser = authService.getCurrentUser();
-        if (!currentUser.getPassword().equals(password)) throw new BadCredentialsException("Could not update user information. Wrong password");
+        if (passwordEncoder.matches(password, currentUser.getPassword())) throw new BadCredentialsException("Could not update user information. Wrong password");
         // Last name or first name may be null or empty if user is only updating one. So no error thrown.
         if (updateUser.getFirstName() != null && !updateUser.getFirstName().isEmpty()) currentUser.setFirstName(updateUser.getFirstName());
         if (updateUser.getLastName() != null && !updateUser.getLastName().isEmpty()) currentUser.setLastName(updateUser.getLastName());
+        userRepository.save(currentUser);
+    }
+
+    @Transactional
+    @PreAuthorize("isAuthenticated()")
+    @Override
+    public void updatePassword(String currentPassword, String newPassword, String  confirmPassword) {
+        if (newPassword.length() < 6) throw new BadParameterException("Password must be at least 6 characters");
+        User currentUser = authService.getCurrentUser();
+        if (passwordEncoder.matches(currentPassword, newPassword)) throw new BadParameterException("New password must be different from current password");
+        if (!currentUser.getPassword().equals(currentPassword)) throw new BadParameterException("Invalid current password");
+        if (!newPassword.equals(confirmPassword)) throw new BadParameterException("New passwords do not match");
+        currentUser.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(currentUser);
     }
 

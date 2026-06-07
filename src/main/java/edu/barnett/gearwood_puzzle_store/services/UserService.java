@@ -5,6 +5,7 @@ import edu.barnett.gearwood_puzzle_store.dtos.RegistrationRequestDto;
 import edu.barnett.gearwood_puzzle_store.dtos.UserDto;
 import edu.barnett.gearwood_puzzle_store.entities.User;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 
@@ -12,18 +13,16 @@ public interface UserService {
 
     void registerUser(RegistrationRequestDto registrationRequest);
 
-    @PreAuthorize("isAuthenticated()")
-    void changePassword(String currentPassword, String newPassword);
-
     void loginUser(LoginRequestDto request,
                    HttpServletResponse response);
 
     UserDto findUserByEmail(String email);
 
-    void registerNewUser(User user);
+    @PreAuthorize("isAuthenticated()")
+    void updateUserInfo(User updateUser, String password);
 
     @PreAuthorize("isAuthenticated()")
-    void updateUser(User updateUser, String password);
+    void updatePassword(String currentPassword, String newPassword, String confirmPassword);
 
     int getUserCartSize();
 

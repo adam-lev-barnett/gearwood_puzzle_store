@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 /**
- * Exposes the current user's display data to every view (notably the header
- * fragment) on each request. Derived from the SecurityContext — which the JWT
- * filter rebuilds from the cookie per request — rather than the HttpSession,
- * so the values stay correct across server restarts.
+ * Exposes the current user's display data to every view so that information isn't lost upon app restart for fragments, which aren't specifically scoped to a controller
  */
 @ControllerAdvice
 public class GlobalModelAttributes {
@@ -37,10 +34,8 @@ public class GlobalModelAttributes {
     }
 
     /**
-     * True only for a genuinely logged-in user. Anonymous requests carry an
-     * AnonymousAuthenticationToken whose isAuthenticated() returns true, so we
-     * exclude it explicitly — otherwise getCurrentUser() would look up the
-     * "anonymousUser" principal and throw.
+     * True only for a genuinely logged-in user. Anonymous authentication tokens are created
+     * for cart persistence after login
      */
     private boolean isLoggedIn(Authentication auth) {
         return auth != null

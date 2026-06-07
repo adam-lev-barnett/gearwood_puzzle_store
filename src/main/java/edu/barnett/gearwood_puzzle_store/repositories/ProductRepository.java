@@ -18,6 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     boolean existsByManufacturer(Manufacturer manufacturer);
 
     List<Product> findByActiveTrue();
+    List<Product> findByActiveTrueAndFeaturedTrue();
     List<Product> findByActiveTrueAndCategory(Category category);
     List<Product> findByActiveTrueAndDifficulty(Difficulty difficulty);
     List<Product> findByActiveTrueAndPriceBetween(BigDecimal min, BigDecimal max);

@@ -9,18 +9,18 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public record ProductSummaryDto(
-                                String productCode,
-                                String name,
-                                String manufacturer,
-                                Category category,
-                                Difficulty difficulty,
-                                BigDecimal price,
-                                String shortDescription,
-                                String longDescription,
-                                Integer numberOfPieces,
-                                String imgSrc,
-                                boolean isActive,
-                                List<String> images) {
+        String productCode,
+        String name,
+        String manufacturer,
+        Category category,
+        Difficulty difficulty,
+        BigDecimal price,
+        String shortDescription,
+        String longDescription,
+        Integer numberOfPieces,
+        String imgSrc,
+        boolean isActive,
+        List<String> images) {
 
     public ProductSummaryDto(Product product) {
         this(
@@ -35,8 +35,7 @@ public record ProductSummaryDto(
                 product.getNumberOfPieces(),
                 product.getPrimaryImage(),
                 product.isActive(),
-                ImageMap.getProductImages().getOrDefault(product.getProductCode(), List.of())
-                );
+                ImageMap.getProductImages().getOrDefault(product.getProductCode(), List.of()));
     }
 }
 

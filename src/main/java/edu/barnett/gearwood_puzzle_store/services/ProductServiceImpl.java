@@ -1,12 +1,19 @@
 package edu.barnett.gearwood_puzzle_store.services;
 
 import edu.barnett.gearwood_puzzle_store.dtos.ProductAdminDto;
+import edu.barnett.gearwood_puzzle_store.dtos.ProductCreateRequestDto;
 import edu.barnett.gearwood_puzzle_store.dtos.ProductSummaryDto;
+import edu.barnett.gearwood_puzzle_store.entities.Manufacturer;
 import edu.barnett.gearwood_puzzle_store.entities.Product;
 import edu.barnett.gearwood_puzzle_store.enums.Category;
 import edu.barnett.gearwood_puzzle_store.enums.Difficulty;
+import edu.barnett.gearwood_puzzle_store.exceptions.AlreadyExistsException;
 import edu.barnett.gearwood_puzzle_store.exceptions.NotFoundException;
+import edu.barnett.gearwood_puzzle_store.repositories.CartItemRepository;
+import edu.barnett.gearwood_puzzle_store.repositories.ManufacturerRepository;
+import edu.barnett.gearwood_puzzle_store.repositories.OrderItemRepository;
 import edu.barnett.gearwood_puzzle_store.repositories.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,9 +23,16 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepo;
+    private final CartItemRepository cartItemRepo;
+    private final OrderItemRepository orderItemRepo;
+    private final ManufacturerRepository manufacturerRepo;
 
-    public ProductServiceImpl(ProductRepository productRepo) {
+    public ProductServiceImpl(ProductRepository productRepo, CartItemRepository cartItemRepo,
+                              OrderItemRepository orderItemRepo, ManufacturerRepository manufacturerRepo) {
         this.productRepo = productRepo;
+        this.cartItemRepo = cartItemRepo;
+        this.orderItemRepo = orderItemRepo;
+        this.manufacturerRepo = manufacturerRepo;
     }
 
     /** Non-customers should see all products*/
@@ -36,6 +50,17 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductSummaryDto> getAllActive() {
         return productRepo
                 .findByActiveTrue()
+                .stream()
+                .map(ProductSummaryDto::new)
+                .toList();
+    }
+
+    /** Active + featured, for the home page showcase. Featured is an admin-only flag,
+     *  so it's used here only to select which products to show — never surfaced in the DTO. */
+    @Override
+    public List<ProductSummaryDto> getFeaturedProducts() {
+        return productRepo
+                .findByActiveTrueAndFeaturedTrue()
                 .stream()
                 .map(ProductSummaryDto::new)
                 .toList();
@@ -322,23 +347,88 @@ public class ProductServiceImpl implements ProductService {
                 .toList();
     }
 
+    @Transactional
     @Override
-    public Product save(Product product) {
-        return null;
+    public void updateProduct(ProductCreateRequestDto productCreateRequest) {
+        Product product = productRepo.findByProductCode(productCreateRequest.productCode())
+                .orElseThrow( () -> new NotFoundException("Product cannot be updated because product doesn't exist"));
+        setProductFields(productCreateRequest, product);
     }
 
+    @Transactional
+    @Override
+    public void setProductFields(ProductCreateRequestDto productCreateRequest, Product product) {
+        product.setProductCode(productCreateRequest.productCode());
+        product.setName(productCreateRequest.name());
+        // Resolve the manufacturer chosen in the dropdown (by name) to its entity.
+        Manufacturer manufacturer = manufacturerRepo.findByName(productCreateRequest.manufacturer())
+                .orElseThrow(() -> new NotFoundException("Manufacturer not found: " + productCreateRequest.manufacturer()));
+        product.setManufacturer(manufacturer);
+        product.setNumberOfPieces(productCreateRequest.numberOfPieces());
+        product.setDifficulty(productCreateRequest.difficulty());
+        product.setCategory(productCreateRequest.category());
+        product.setPrice(productCreateRequest.price());
+        product.setShortDescription(productCreateRequest.shortDescription());
+        product.setLongDescription(productCreateRequest.longDescription());
+        product.setAcquiredDate(productCreateRequest.acquiredDate());
+        // active, featured, and primaryImgSource are deliberately left untouched here so an edit
+        // can't wipe them — they're managed elsewhere (activate/deactivate, curation, seed data).
+        productRepo.save(product);
+    }
+
+    @Transactional
+    @Override
+    public ProductAdminDto createProduct(ProductCreateRequestDto productCreateRequest) {
+        if (productRepo.existsByProductCode(productCreateRequest.productCode())) throw new AlreadyExistsException("Product already exists");
+        Product product = new Product();
+        // New products start visible and un-featured; the create form doesn't manage these fields.
+        product.setActive(true);
+        product.setFeatured(false);
+        // Creating new manufacturers wasn't a requirement for this project, so to keep things simple
+        // the admin picks from existing manufacturers via a dropdown; setProductFields resolves that
+        // chosen name to a Manufacturer entity rather than letting the admin create one here.
+        setProductFields(productCreateRequest, product);
+        return new ProductAdminDto(product);
+    }
+
+    @Transactional
     @Override
     public void activate(String productCode) {
-
+        Product product = productRepo.findByProductCode(productCode)
+                .orElseThrow( () -> new NotFoundException("Product does not exist"));
+        product.setActive(true);
+        productRepo.save(product);
     }
 
+    @Transactional
     @Override
     public void deactivate(String productCode) {
-
+        Product product = productRepo.findByProductCode(productCode)
+                .orElseThrow( () -> new NotFoundException("Product does not exist"));
+        product.setActive(false);
+        productRepo.save(product);
     }
 
+    /**
+     * Hard-deletes a product if nothing references it. If it's in a cart or a past order
+     * (the order line keeps an FK to it), it can't be removed without breaking that data,
+     * so it's deactivated instead — staying out of the catalog while history is preserved.
+     *
+     * @return true if the product was deleted, false if it was deactivated instead.
+     */
+    @Transactional
     @Override
-    public void delete(String productCode) {
-
+    public boolean delete(String productCode) {
+        Product product = productRepo.findByProductCode(productCode)
+                .orElseThrow( () -> new NotFoundException("Product does not exist"));
+        // Note: we deactivate (no exception) so the change actually commits — throwing here
+        // would roll back the very deactivation we just made within this @Transactional method.
+        if (cartItemRepo.existsByProduct(product) || orderItemRepo.existsByProduct(product)) {
+            product.setActive(false);
+            productRepo.save(product);
+            return false;
+        }
+        productRepo.delete(product);
+        return true;
     }
 }

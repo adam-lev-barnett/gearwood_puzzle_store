@@ -9,7 +9,7 @@
 </head>
 <body>
     <main layout:fragment="content">
-        <div class="product-form-container">
+        <div class="form-container">
             <a th:href="@{/products/catalog}" class="back-link">&larr; Back to Products</a>
             <h1>Edit Product</h1>
 
@@ -17,11 +17,13 @@
 
             <!-- ${product} : ProductAdminDto (summary + acquiredDate) used to prefill.
                  ${manufacturers} ${difficulties} ${categories} : option sources. -->
-            <form class="product-form" method="post"
+            <form class="product-form form-card" method="post"
                   th:action="@{/products/{code}/edit(code=${product?.summary()?.productCode()})}">
                 <div class="form-grid">
                     <label>Product Code
-                        <input type="text" name="productCode" th:value="${product?.summary()?.productCode()}" required>
+                        <!-- readonly: the product code is the unique key and is what updateProduct looks up by;
+                             editing it would break the lookup. Still submitted with the form. -->
+                        <input type="text" name="productCode" th:value="${product?.summary()?.productCode()}" readonly required>
                     </label>
                     <label>Name
                         <input type="text" name="name" th:value="${product?.summary()?.name()}" required>

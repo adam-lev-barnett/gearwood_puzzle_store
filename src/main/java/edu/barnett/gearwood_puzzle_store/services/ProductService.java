@@ -1,10 +1,12 @@
 package edu.barnett.gearwood_puzzle_store.services;
 
 import edu.barnett.gearwood_puzzle_store.dtos.ProductAdminDto;
+import edu.barnett.gearwood_puzzle_store.dtos.ProductCreateRequestDto;
 import edu.barnett.gearwood_puzzle_store.dtos.ProductSummaryDto;
 import edu.barnett.gearwood_puzzle_store.entities.Product;
 import edu.barnett.gearwood_puzzle_store.enums.Category;
 import edu.barnett.gearwood_puzzle_store.enums.Difficulty;
+import jakarta.transaction.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,6 +15,10 @@ import java.util.Optional;
 public interface ProductService {
     List<ProductSummaryDto> getAllActive();
     List<ProductSummaryDto> getAll();
+
+    /** Active products flagged as featured — for the home page showcase. */
+    List<ProductSummaryDto> getFeaturedProducts();
+
     ProductSummaryDto getByProductCode(String productCode);
 
     /** Admin-only fetch: includes admin fields (e.g. acquiredDate) not exposed to customers. */
@@ -53,9 +59,16 @@ public interface ProductService {
     List<ProductSummaryDto> getProductsByKeywordAndCategoryAndDifficultyAndMaxPrice(String keyword, Category category, Difficulty difficulty, BigDecimal maxPrice);
     List<ProductSummaryDto> getProductsByKeywordAndCategoryAndDifficultyAndPriceRange(String keyword, Category category, Difficulty difficulty, BigDecimal minPrice, BigDecimal maxPrice);
 
+    void updateProduct(ProductCreateRequestDto productCreateRequest);
 
-    Product save(Product product);
+    @Transactional
+    void setProductFields(ProductCreateRequestDto productCreateRequest, Product product);
+
+    ProductAdminDto createProduct(ProductCreateRequestDto productCreateRequest);
+
     void activate(String productCode);
     void deactivate(String productCode);
-    void delete(String productCode);
+
+    /** @return true if hard-deleted, false if it was deactivated instead (referenced by a cart/order). */
+    boolean delete(String productCode);
 }

@@ -6,13 +6,14 @@ import java.time.LocalDate;
 
 /**
  * Admin-facing product view. Wraps the customer-safe {@link ProductSummaryDto}
- * and adds fields that must never be exposed to regular customers (e.g. acquiredDate).
- * Only build/pass this DTO from admin-only controller paths.
+ * and adds fields that must never be exposed to regular customers (e.g. acquiredDate,
+ * featured). Only build/pass this DTO from admin-only controller paths.
  */
 public record ProductAdminDto(ProductSummaryDto summary,
-                              LocalDate acquiredDate) {
+                              LocalDate acquiredDate,
+                              boolean featured) {
 
     public ProductAdminDto(Product product) {
-        this(new ProductSummaryDto(product), product.getAcquiredDate());
+        this(new ProductSummaryDto(product), product.getAcquiredDate(), product.isFeatured());
     }
 }

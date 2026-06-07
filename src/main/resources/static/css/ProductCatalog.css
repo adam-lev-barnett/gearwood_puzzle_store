@@ -10,8 +10,35 @@ h1 {
     padding: 0 2rem;
 }
 
+/* ── Admin: catalog header + create button ──────────────────── */
+
+.catalog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+.catalog-header h1 { margin-bottom: 0; }
+
+.create-product-btn {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 0.6rem 1.1rem;
+    border-radius: 4px;
+    color: #fff;
+    background: var(--accent);
+    transition: background 0.2s;
+}
+.create-product-btn:hover { background: var(--accent-hover); }
+
 /* ── Search / Filter Form ───────────────────────────────────── */
 
+/* Self-contained horizontal filter bar (no .form-card chrome). */
 #search-form {
     display: flex;
     flex-wrap: wrap;
@@ -119,11 +146,8 @@ h1 {
     margin: 0 auto;
 }
 
+/* .empty-state is global; here it must span the grid and sit lower. */
 .empty-state {
     grid-column: 1 / -1;
-    text-align: center;
     padding: 4rem 0;
-    font-style: italic;
-    color: var(--text-secondary);
-    letter-spacing: 0.03em;
 }

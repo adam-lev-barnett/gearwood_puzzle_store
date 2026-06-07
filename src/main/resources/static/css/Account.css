@@ -13,26 +13,7 @@
     border-bottom: 1px solid var(--border);
 }
 
-/* ── Shared card surface ────────────────────────────────────── */
-
-.card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    padding: 1.75rem;
-}
-
-.card h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.6rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    line-height: 1.2;
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.85rem;
-    border-bottom: 1px solid var(--border);
-}
+/* Card surface + .card h2 are global (GlobalStyles). */
 
 /* ── Top grid: profile + actions ────────────────────────────── */
 
@@ -93,57 +74,7 @@
     flex-direction: column;
 }
 
-.action-button {
-    display: block;
-    text-align: center;
-    text-decoration: none;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #fff;
-    background: var(--accent);
-    border-radius: 6px;
-    padding: 0.85rem 1rem;
-    box-shadow: var(--shadow);
-    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-}
-
-.action-button + .action-button {
-    margin-top: 0.75rem;
-}
-
-.action-button:hover {
-    background: var(--accent-hover);
-    box-shadow: 0 8px 24px rgba(196, 130, 42, 0.22);
-}
-
-.action-button:active {
-    transform: scale(0.98);
-}
-
-.action-link {
-    display: block;
-    text-align: center;
-    text-decoration: none;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.76rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0.75rem 1rem;
-    margin-top: 0.75rem;
-    transition: color 0.2s, border-color 0.2s;
-}
-
-.action-link:hover {
-    color: var(--accent);
-    border-color: var(--accent);
-}
+/* .action-button / .action-link are global (GlobalStyles). */
 
 /* ── Order history ──────────────────────────────────────────── */
 
@@ -223,15 +154,7 @@
     line-height: 1;
 }
 
-/* ── Empty state ────────────────────────────────────────────── */
-
-.empty-state {
-    text-align: center;
-    padding: 2.5rem 0;
-    font-style: italic;
-    color: var(--text-secondary);
-    letter-spacing: 0.03em;
-}
+/* .empty-state is global (GlobalStyles). */
 
 /* ── Responsive ─────────────────────────────────────────────── */
 

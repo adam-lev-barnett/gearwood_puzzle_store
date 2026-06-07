@@ -80,8 +80,10 @@
 }
 
 /* Keeps the Cart link and its count as ONE nav item, so the .main-nav
-   gap applies around the pair instead of between them. */
-.cart-item {
+   gap applies around the pair instead of between them. Named .nav-cart
+   (not .cart-item) to avoid colliding with the cart page's line-item
+   styles, which set a much larger gap/padding. */
+.nav-cart {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;

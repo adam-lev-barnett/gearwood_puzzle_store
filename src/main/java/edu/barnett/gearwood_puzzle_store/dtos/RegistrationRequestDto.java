@@ -2,6 +2,7 @@ package edu.barnett.gearwood_puzzle_store.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public record RegistrationRequestDto(
         @NotBlank(message = "First name cannot be blank")
@@ -15,6 +16,7 @@ public record RegistrationRequestDto(
         String email,
 
         @NotBlank(message = "Please enter a password")
+        @Size(min = 6, message = "Password must be at least 6 characters")
         String password,
 
         @NotBlank(message = "Please confirm your password")

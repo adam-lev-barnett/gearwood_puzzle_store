@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Jost:wght@300;400;500&display=swap');
 
+/* ============================================================================
+   Gearwood — global design system.
+   Loaded on every page via MainLayout. Holds design tokens + every shared UI
+   primitive (cards, forms, buttons, links, banners) so pages don't each
+   re-define them. Page stylesheets should only hold page-specific layout.
+   ========================================================================== */
+
 :root {
     --bg: #ffffff;
     --surface:        #FFFFFF;
@@ -10,7 +17,10 @@
     --border:         #E2D5C8;
     --row-alt:        #FBF8F4;
     --row-hover:      #F4EDE3;
+    --danger:         #A8443A;
     --shadow:         0 2px 12px rgba(44, 26, 14, 0.07);
+    --shadow-lift:    0 8px 24px rgba(196, 130, 42, 0.22);
+    --focus-ring:     0 0 0 3px rgba(196, 130, 42, 0.12);
 }
 
 * {
@@ -35,6 +45,212 @@ h1 {
     color: var(--text-primary);
 }
 
-.error-message {
-    color: red;
+/* ── Cards ──────────────────────────────────────────────────────────────────
+   Generic surface used across account, cart, checkout, orders, etc. Components
+   that need different padding (e.g. cart rows) override it locally. */
+
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 1.75rem;
+}
+
+.card h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--border);
+}
+
+/* ── Boxed forms ────────────────────────────────────────────────────────────
+   Opt-in via class="... form-card" (login, registration, account edit, change
+   password, product create/edit, checkout). Replaces the old global `form {}`
+   rule, which leaked card chrome onto utility forms (search, cart, add-to-cart,
+   admin actions). Those forms are now styled purely by their own classes. */
+
+/* Centered wrapper for narrow single-column form pages (login, registration). */
+.form-container {
+    max-width: 450px;
+    width: 100%;
+    margin: 10px auto 40px;
+    padding: 20px;
+}
+
+.form-container h1 {
+    margin: 0;
+    padding-bottom: 20px;
+}
+
+.form-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+}
+
+.form-card label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.form-card input,
+.form-card select,
+.form-card textarea {
+    width: 100%;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.92rem;
+    color: var(--text-primary);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.6rem 0.7rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-card input:focus,
+.form-card select:focus,
+.form-card textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+/* ── Buttons & action links ─────────────────────────────────────────────── */
+
+/* Primary form-submit button (login, register, account edit, product forms). */
+.submit-button {
+    margin-top: 12px;
+    padding: 0.8rem 1rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.submit-button:hover { background: var(--accent-hover); }
+.submit-button:active { transform: scale(0.98); }
+
+/* Filled action link/button (account actions, "View Details", etc.). */
+.action-button {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--accent);
+    border-radius: 6px;
+    padding: 0.85rem 1rem;
+    box-shadow: var(--shadow);
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+.action-button + .action-button { margin-top: 0.75rem; }
+.action-button:hover { background: var(--accent-hover); box-shadow: var(--shadow-lift); }
+.action-button:active { transform: scale(0.98); }
+
+/* Outlined secondary action link. */
+.action-link {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    margin-top: 0.75rem;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.action-link:hover { color: var(--accent); border-color: var(--accent); }
+
+/* Quiet "← Back to …" link at the top of sub-pages. */
+.back-link {
+    display: inline-block;
+    margin-top: 2rem;
+    margin-left: 3rem;
+    margin-bottom: 1.5rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.back-link:hover { color: var(--accent); }
+
+/* ── Banners & messages ─────────────────────────────────────────────────── */
+
+/* Neutral/info flash (brass accent). */
+.info-banner {
+    max-width: 1100px;
+    margin: 1.5rem auto 0;
+    padding: 0.85rem 1.25rem;
+    background: var(--row-alt);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    letter-spacing: 0.02em;
+}
+
+/* Inline validation / error banner inside forms and pages. */
+.form-error {
+    margin-bottom: 1.25rem;
+    padding: 0.85rem 1.25rem;
+    background: #FBEDEA;
+    border: 1px solid #E7C3BC;
+    border-left: 3px solid var(--danger);
+    border-radius: 4px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    color: #8A382F;
+}
+
+.error-message { color: var(--danger); text-align: center; }
+.success-message { color: #4F7A3A; text-align: center; }
+
+/* ── Empty states ───────────────────────────────────────────────────────── */
+
+.empty-state {
+    text-align: center;
+    padding: 2.5rem 0;
+    font-style: italic;
+    color: var(--text-secondary);
+    letter-spacing: 0.03em;
 }

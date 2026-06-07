@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<div th:fragment="productCard(productCode, productImg, productName, manufacturer, category, difficulty, price, description)"
+<div th:fragment="productCard(productCode, productImg, productName, numPieces, category, difficulty, price, description)"
      class="product-card">
     <a th:href="@{/products/{code}(code=${productCode})}">
         <img class="card-image"
@@ -23,10 +23,19 @@
             <p class="card-description" th:text="${description}"></p>
             <div class="card-footer">
                 <span class="card-price" th:text="${'$' + price}"></span>
-                <span class="card-manufacturer" th:text="${manufacturer}"></span>
+                <span class="card-manufacturer" th:text="${numPieces} + ' Pieces'"></span>
             </div>
         </div>
     </a>
+
+    <!-- Admin-only actions, kept OUTSIDE the card's <a> (a form can't be nested in a link). -->
+    <div sec:authorize="hasRole('ADMIN')" class="card-admin-actions">
+        <a th:href="@{/products/{code}/edit(code=${productCode})}" class="card-edit-btn">Edit</a>
+        <form th:action="@{/products/{code}/delete(code=${productCode})}" method="post"
+              onsubmit="return confirm('Delete this product? If it is in a cart or past order it will be deactivated instead.');">
+            <button type="submit" class="card-delete-btn">Delete</button>
+        </form>
+    </div>
 </div>
 
 </body>

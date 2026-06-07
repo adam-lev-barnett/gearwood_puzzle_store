@@ -5,6 +5,7 @@ import edu.barnett.gearwood_puzzle_store.dtos.OrderSummaryDto;
 import edu.barnett.gearwood_puzzle_store.entities.*;
 import edu.barnett.gearwood_puzzle_store.enums.OrderStatus;
 import edu.barnett.gearwood_puzzle_store.exceptions.BadParameterException;
+import edu.barnett.gearwood_puzzle_store.exceptions.PaymentDeclinedException;
 import edu.barnett.gearwood_puzzle_store.payment.gateway.DummyPaymentProcessor;
 import edu.barnett.gearwood_puzzle_store.payment.model.PaymentRequest;
 import edu.barnett.gearwood_puzzle_store.payment.model.PaymentResult;
@@ -39,16 +40,20 @@ public class CheckoutServiceImpl implements CheckoutService {
     @Override
     @Transactional
     public OrderSummaryDto processCheckout(User user, ShippingInfo shippingInfo, PaymentRequest paymentRequest) {
-        PaymentResult paymentResult = paymentProcessor.processPayment(paymentRequest);
-        // Declined: return null so the controller can show a payment error instead of a receipt.
-        if (paymentResult.getStatus() == PaymentStatus.DECLINED) return null;
-
         List<CartItem> cart = cartItemRepository.findByUser(user);
         if (cart.isEmpty()) throw new BadParameterException("Cannot check out an empty cart");
 
         // Totals are read from the cart's own pricing so the tax/shipping rules stay in one place.
         // The DTO is consumed locally here and mapped onto the order entity — it isn't passed on.
         CartSummaryDto totals = cartService.getCartSummary();
+
+        // The checkout form doesn't submit an amount; charge the server-computed total
+        // (never trust a client-supplied amount). The processor validates amount > 0.
+        paymentRequest.setAmount(totals.total());
+
+        PaymentResult paymentResult = paymentProcessor.processPayment(paymentRequest);
+        if (paymentResult.getStatus() == PaymentStatus.DECLINED)
+            throw new PaymentDeclinedException("The payment was declined. Please try again");
 
         OrderData order = new OrderData(
                 generateOrderNumber(),

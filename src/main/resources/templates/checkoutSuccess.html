@@ -14,7 +14,7 @@
             <p>Your order has been placed successfully.</p>
 
             <!-- ${orderNumber} : application-defined order number (e.g. ORD-7E9F7591) -->
-            <p class="order-number">Order Number: <span th:text="${orderNumber}"></span></p>
+            <p class="order-number">Order Number: <span th:text="${finalOrderDetails.orderNumber()}"></span></p>
 
             <div class="success-actions">
                 <a th:href="@{/products/catalog}" class="action-button">Continue Shopping</a>

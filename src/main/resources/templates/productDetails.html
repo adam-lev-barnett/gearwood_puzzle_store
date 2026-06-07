@@ -9,6 +9,10 @@
 </head>
 <body>
     <main layout:fragment="content">
+        <!-- Flash messages, e.g. "Product updated successfully" after an edit -->
+        <p class="success-message" th:if="${message}" th:text="${message}"></p>
+        <p class="form-error" th:if="${error}" th:text="${error}"></p>
+
         <div class="product-detail-container">
 
             <div class="image-gallery">
@@ -59,6 +63,18 @@
                         <button type="submit" class="add-to-cart-btn">Add to Cart</button>
                     </div>
                 </form>
+
+                <!-- Admin-only product management -->
+                <div sec:authorize="hasRole('ADMIN')" class="detail-admin-actions">
+                    <a th:href="@{/products/{code}/edit(code=${product.productCode()})}" class="detail-edit-btn">Edit Product</a>
+                    <form th:action="@{/products/{code}/toggleActivation(code=${product.productCode()})}" method="post">
+                        <button type="submit" class="active-toggle-button" th:text="${product.isActive() ? 'Deactivate Product' : 'Activate Product'}">Activate Product</button>
+                    </form>
+                    <form th:action="@{/products/{code}/delete(code=${product.productCode()})}" method="post"
+                          onsubmit="return confirm('Delete this product? If it is in a cart or past order it will be deactivated instead.');">
+                        <button type="submit" class="detail-delete-btn">Delete Product</button>
+                    </form>
+                </div>
             </div>
 
         </div>

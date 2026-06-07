@@ -1,6 +1,6 @@
 package edu.barnett.gearwood_puzzle_store.controllers;
 
-import edu.barnett.gearwood_puzzle_store.dtos.PendingCartAdd;
+import edu.barnett.gearwood_puzzle_store.dtos.PendingAddToCart;
 import edu.barnett.gearwood_puzzle_store.services.CartService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * Owns the /cart URL space. The "Add to Cart" buttons on the catalog and product detail pages
- * post here rather than to ProductController — the cart is the resource being mutated, and this
- * keeps ProductController read-only and product-focused.
+ * Separates logic from the ProductController to decouple the two; both handle different logic
  */
 @Controller
 @RequestMapping("/cart")
@@ -29,6 +27,7 @@ public class CartController {
         this.cartService = cartService;
     }
 
+    /** Generates cart page */
     @GetMapping
     public String viewCart(Model model) {
         model.addAttribute("cartItems", cartService.getCartItems());
@@ -36,8 +35,7 @@ public class CartController {
         return "cart";
     }
 
-    // permitAll() overrides the class-level isAuthenticated() so anonymous shoppers
-    // can reach this method — we handle their auth state ourselves below.
+    /** permitAll() overrides the class-level isAuthenticated() so anonymous shoppers can reach this method, which will then prompt them to log in */
     @PostMapping("/add")
     @PreAuthorize("permitAll()")
     public String addToCart(@RequestParam String productCode,
@@ -45,11 +43,11 @@ public class CartController {
                             @AuthenticationPrincipal UserDetails user,
                             HttpSession session,
                             RedirectAttributes redirectAttributes) {
-        // Anonymous shopper: the principal isn't a UserDetails, so it resolves to null.
-        // Stash the intended item and send them to log in; HomeController replays it
         // from the session right after a successful login.
+        // Anonymous shopper in not stored as UserDetails, so it resolves to null.
         if (user == null) {
-            session.setAttribute("pendingCartAdd", new PendingCartAdd(productCode, quantity));
+            // Session-save the intended item in a transitive cart, and send them to log in;
+            session.setAttribute("pendingCartAdd", new PendingAddToCart(productCode, quantity));
             redirectAttributes.addFlashAttribute("infoMessage", "Please log in to add items to your cart.");
             return "redirect:/login";
         }

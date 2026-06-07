@@ -52,6 +52,9 @@ public class Product {
     @Column
     private String primaryImgSource;
 
+    @Column
+    private Boolean featured;
+
     /** Admin-only field — the date the product was acquired into the catalog.
      *  Per spec it defaults to the current date on creation. Never exposed to customers. */
     @Column(nullable = false)
@@ -69,7 +72,7 @@ public class Product {
 
     public Product(String productCode, String name, Manufacturer manufacturer, Integer numberOfPieces,
                    Difficulty difficulty, Category category, BigDecimal price,
-                   String shortDescription, String longDescription, boolean active, String primaryImgSource) {
+                   String shortDescription, String longDescription, boolean active, String primaryImgSource, boolean featured) {
         this.productCode = productCode;
         this.name = name;
         this.manufacturer = manufacturer;
@@ -81,6 +84,7 @@ public class Product {
         this.longDescription = longDescription;
         this.active = active;
         this.primaryImgSource = primaryImgSource;
+        this.featured = featured;
     }
 
     public Long getId() { return id; }
@@ -121,6 +125,12 @@ public class Product {
     }
     public void setPrimaryImage(String imageSource) {
         this.primaryImgSource = imageSource;
+    }
+
+    // Column is nullable (older rows may predate this field), so treat null as "not featured".
+    public boolean isFeatured() { return Boolean.TRUE.equals(this.featured); }
+    public void setFeatured(boolean featured) {
+        this.featured = featured;
     }
 
     public LocalDate getAcquiredDate() { return acquiredDate; }

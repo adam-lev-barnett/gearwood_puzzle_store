@@ -42,10 +42,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // First, rate limit EVERY request as early as possible:
                 .addFilterBefore(globalRateLimiterFilter, UsernamePasswordAuthenticationFilter.class)
 
-                // Then, process JWT authentication:
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .csrf(AbstractHttpConfigurer::disable)
@@ -59,13 +57,9 @@ public class SecurityConfig {
 
                         .anyRequest().permitAll()
                 )
-                // JWT app: don't store the SecurityContext in an HTTP session.
-                // The jwt cookie is the ONLY thing that authenticates a request,
-                // so deleting it on logout fully logs the user out.
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // Let the filter chain own logout — it reliably clears the cookie + session.
                 .logout(logout -> logout
                         // our Logout link is a GET; the default only matches POST /logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))

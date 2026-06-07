@@ -22,13 +22,8 @@
     align-items: start;
 }
 
-/* Shared card surface (cart items + order summary) */
-.card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-}
+/* .card surface is global (GlobalStyles); .cart-item / .order-summary below
+   set their own padding, overriding the global card padding. */
 
 /* ── Cart items ─────────────────────────────────────────────── */
 
@@ -210,14 +205,9 @@
     color: var(--accent);
 }
 
-/* ── Empty state ────────────────────────────────────────────── */
-
+/* .empty-state is global (GlobalStyles); the cart wants a taller one. */
 .empty-state {
-    text-align: center;
     padding: 4rem 0;
-    font-style: italic;
-    color: var(--text-secondary);
-    letter-spacing: 0.03em;
 }
 
 /* ── Order summary sidebar ──────────────────────────────────── */

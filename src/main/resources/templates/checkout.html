@@ -16,8 +16,8 @@
             <!-- ${error} : "payment declined" / validation message set by the controller -->
             <p class="form-error" th:if="${error}" th:text="${error}"></p>
 
-            <div class="checkout-layout">
-                <form class="checkout-form" th:action="@{/checkout}" method="post">
+            <div class="form-container">
+                <form class="checkout-form form-card" th:action="@{/checkout}" method="post">
                     <fieldset>
                         <legend>Shipping Information</legend>
                         <label for="name">Full Name</label>

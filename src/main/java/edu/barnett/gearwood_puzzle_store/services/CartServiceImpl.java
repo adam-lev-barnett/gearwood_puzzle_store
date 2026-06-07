@@ -21,7 +21,8 @@ import java.util.List;
 @PreAuthorize("isAuthenticated()")
 public class CartServiceImpl implements CartService {
 
-    // Business rules (per spec): 8.25% tax, $8.99 flat shipping, free at or above $75.00.
+    // Requirements: 8.25% tax, $8.99 flat shipping, free at or above $75.00.
+    // Adjust if requirements change
     private static final BigDecimal TAX_RATE = new BigDecimal("0.0825");
     private static final BigDecimal STANDARD_SHIPPING = new BigDecimal("8.99");
     private static final BigDecimal FREE_SHIPPING_THRESHOLD = new BigDecimal("75.00");
@@ -46,11 +47,13 @@ public class CartServiceImpl implements CartService {
                 .toList();
     }
 
+    /** Used to generate cart summary page */
     @Override
     public CartSummaryDto getCartSummary() {
         BigDecimal subtotal = getCartItems().stream()
                 .map(CartLineDto::lineTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
+                // Rounding mode not necessary for scope of product prices, but needed for scale
                 .setScale(2, RoundingMode.HALF_UP);
 
         boolean freeShipping = subtotal.compareTo(FREE_SHIPPING_THRESHOLD) >= 0;
@@ -103,15 +106,14 @@ public class CartServiceImpl implements CartService {
         cartItemRepository.deleteByUser(authService.getCurrentUser());
     }
 
+    /** Helper active product lookup for methods that prevent customers from viewing/adding inactive products */
     private Product activeProduct(String productCode) {
         return productRepository.findByProductCodeAndActiveTrue(productCode)
                 .orElseThrow(() -> new NotFoundException("Product not found: " + productCode));
     }
 
     /**
-     * Loads the current user's cart line for the given product. Because the lookup is scoped to the
-     * current user, a user can only ever act on their own line — there is no way to touch someone
-     * else's cart by submitting another product/user combination.
+     * Loads the current user's cart line for the given product. Limits access to specific user so others can't view their specific combination of user and CartItem
      */
     private CartItem currentUsersLine(String productCode) {
         Product product = activeProduct(productCode);

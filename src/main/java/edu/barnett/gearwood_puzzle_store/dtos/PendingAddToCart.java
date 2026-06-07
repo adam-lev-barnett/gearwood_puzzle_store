@@ -8,5 +8,5 @@ import java.io.Serializable;
  * login hop and replayed once the user authenticates. Serializable so it can
  * live in a session safely.
  */
-public record PendingCartAdd(String productCode, int quantity) implements Serializable {
+public record PendingAddToCart(String productCode, int quantity) implements Serializable {
 }

@@ -9,7 +9,7 @@
 </head>
 <body>
     <main layout:fragment="content">
-        <div class="product-form-container">
+        <div class="form-container">
             <a th:href="@{/products/catalog}" class="back-link">&larr; Back to Products</a>
             <h1>Create Product</h1>
 
@@ -17,7 +17,7 @@
             <p class="form-error" th:if="${error}" th:text="${error}"></p>
 
             <!-- ${manufacturers} ${difficulties} ${categories} : option sources for the selects -->
-            <form class="product-form" th:action="@{/products/new}" method="post">
+            <form class="product-form form-card" th:action="@{/products/new}" method="post">
                 <div class="form-grid">
                     <label>Product Code
                         <input type="text" name="productCode" required>
