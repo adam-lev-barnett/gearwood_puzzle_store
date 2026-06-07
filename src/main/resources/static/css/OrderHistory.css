@@ -1,0 +1,15 @@
+/* OrderHistory.css — styles for orderHistory.html (Order History list page) */
+
+/* Standard page container: house gutter (padding: 0 2rem) so the back-link and
+   content align to the same edge as every other page rather than the viewport. */
+.order-history-container {
+    max-width: 1000px;
+    margin: 0 auto 4rem;
+    padding: 0 2rem;
+}
+
+/* Tight top cluster (back-link + heading), then a generous gap before the
+   order list begins — matches the Order Details page. */
+.order-history-container > h1 {
+    margin-bottom: 2.5rem;
+}

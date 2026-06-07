@@ -18,6 +18,7 @@
     --row-alt:        #FBF8F4;
     --row-hover:      #F4EDE3;
     --danger:         #A8443A;
+    --danger-hover:   #8A382F;
     --shadow:         0 2px 12px rgba(44, 26, 14, 0.07);
     --shadow-lift:    0 8px 24px rgba(196, 130, 42, 0.22);
     --focus-ring:     0 0 0 3px rgba(196, 130, 42, 0.12);
@@ -151,8 +152,11 @@ h1 {
 .submit-button:hover { background: var(--accent-hover); }
 .submit-button:active { transform: scale(0.98); }
 
-/* Filled action link/button (account actions, "View Details", etc.). */
-.action-button {
+/* Filled action buttons. Two variants share one shape and differ only in color:
+   .action-button — primary (brass); .cancel-button — destructive (danger red).
+   Shared shape lives in the grouped selector; each variant sets just its color. */
+.action-button,
+.cancel-button {
     display: block;
     text-align: center;
     text-decoration: none;
@@ -162,16 +166,29 @@ h1 {
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: #fff;
-    background: var(--accent);
     border-radius: 6px;
     padding: 0.85rem 1rem;
     box-shadow: var(--shadow);
     transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
 }
 
-.action-button + .action-button { margin-top: 0.75rem; }
+/* Primary (brass) variant. */
+.action-button { background: var(--accent); }
 .action-button:hover { background: var(--accent-hover); box-shadow: var(--shadow-lift); }
-.action-button:active { transform: scale(0.98); }
+
+/* Destructive (cancel) variant — design-system danger red, with a matching
+   red-tinted lift on hover (the brass --shadow-lift would clash here). */
+.cancel-button { background: var(--danger); }
+.cancel-button:hover { background: var(--danger-hover); box-shadow: 0 8px 24px rgba(168, 68, 58, 0.22); }
+
+/* Press feedback + stacking gap apply to both variants, in any combination. */
+.action-button:active,
+.cancel-button:active { transform: scale(0.98); }
+
+.action-button + .action-button,
+.action-button + .cancel-button,
+.cancel-button + .action-button,
+.cancel-button + .cancel-button { margin-top: 0.75rem; }
 
 /* Outlined secondary action link. */
 .action-link {
@@ -193,12 +210,50 @@ h1 {
 
 .action-link:hover { color: var(--accent); border-color: var(--accent); }
 
-/* Quiet "← Back to …" link at the top of sub-pages. */
+/* Outlined "step back" cancel — the red sibling of .action-link. For benign,
+   navigate-away cancels (form Cancel buttons). Use the filled .cancel-button
+   only for genuinely destructive actions (delete, cancel order). */
+.cancel-link {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--danger);
+    background: transparent;
+    border: 1px solid var(--danger);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    margin-top: 0.75rem;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.cancel-link:hover { color: #fff; background: var(--danger); border-color: var(--danger); }
+
+/* Row of form buttons (submit + cancel) shown side by side, equal width.
+   Children's own top margins are zeroed so they align as a clean row. */
+.form-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.form-actions > * {
+    flex: 1;
+    margin-top: 0;
+}
+
+/* Quiet "← Back to …" link at the top of sub-pages. Horizontal placement is
+   intentionally NOT set here — the link aligns to its container's own gutter
+   (the standard `padding: 0 2rem` used by every page container), so it lines
+   up with the page heading and content instead of carrying a fixed offset. */
 .back-link {
     display: inline-block;
-    margin-top: 2rem;
-    margin-left: 3rem;
-    margin-bottom: 1.5rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
     font-family: 'Jost', sans-serif;
     font-size: 0.75rem;
     font-weight: 500;

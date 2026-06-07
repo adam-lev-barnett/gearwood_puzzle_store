@@ -55,7 +55,11 @@ public class CartController {
             cartService.addToCart(productCode, quantity);
             redirectAttributes.addFlashAttribute("successMessage", "Item added to cart.");
         } catch (Exception ex) {
+            // Send them back to the product's detail page with the reason (e.g. the
+            // product is inactive). The detail route is /products/{code} — "productDetails"
+            // is the view name, not a URL.
             redirectAttributes.addFlashAttribute("errorMessage", "Could not add item: " + ex.getMessage());
+            return "redirect:/products/" + productCode;
         }
         return "redirect:/cart";
     }

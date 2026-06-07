@@ -2,29 +2,36 @@
 
 /* ── Hero ───────────────────────────────────────────────────── */
 
+/* Full-bleed banner: the workbench photo with a warm dark scrim on the left
+   (where the copy sits) fading toward the subject on the right. */
 .hero {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 5rem 2rem 4.5rem;
-    text-align: center;
     position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 560px;
+    padding: 4rem clamp(1.5rem, 7vw, 6.5rem);
+    background-image:
+        linear-gradient(100deg,
+            rgba(24, 16, 11, 0.88) 0%,
+            rgba(24, 16, 11, 0.66) 38%,
+            rgba(24, 16, 11, 0.30) 68%,
+            rgba(24, 16, 11, 0.10) 100%),
+        url('/BusinessImages/hero-banner.png');
+    background-size: cover;
+    background-position: center right;
+    overflow: hidden;
 }
 
-/* Soft warm wash behind the hero for atmosphere without a hard edge */
-.hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: radial-gradient(ellipse 70% 80% at 50% 0%, var(--row-alt) 0%, transparent 70%);
-    pointer-events: none;
+.hero-content {
+    position: relative;
+    max-width: 600px;
 }
 
 .hero-eyebrow {
     font-family: 'Jost', sans-serif;
     font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.22em;
+    font-weight: 600;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--accent);
     margin-bottom: 1.25rem;
@@ -32,21 +39,24 @@
 }
 
 .hero h1 {
-    font-size: 3.1rem;
-    line-height: 1.12;
+    text-align: left;
+    color: #FCF7F0;
+    font-size: 3.2rem;
+    line-height: 1.1;
     letter-spacing: 0.01em;
     margin-bottom: 1.5rem;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.4);
     animation: heroRise 0.5s ease 0.08s both;
 }
 
 .hero-subtitle {
     font-family: 'Jost', sans-serif;
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 300;
-    line-height: 1.75;
-    color: var(--text-secondary);
-    max-width: 540px;
-    margin: 0 auto 2.25rem;
+    line-height: 1.7;
+    color: rgba(252, 247, 240, 0.85);
+    max-width: 520px;
+    margin: 0 0 2.25rem;
     animation: heroRise 0.5s ease 0.16s both;
 }
 
@@ -223,12 +233,31 @@
 /* ── Responsive ─────────────────────────────────────────────── */
 
 @media (max-width: 900px) {
+    .hero {
+        min-height: 460px;
+        /* Strengthen the scrim so copy stays legible as the column narrows. */
+        background-image:
+            linear-gradient(100deg,
+                rgba(24, 16, 11, 0.90) 0%,
+                rgba(24, 16, 11, 0.72) 55%,
+                rgba(24, 16, 11, 0.40) 100%),
+            url('/BusinessImages/hero-banner.png');
+    }
     .hero h1 { font-size: 2.5rem; }
     .product-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 560px) {
-    .hero { padding: 3.5rem 1.5rem 3rem; }
+    .hero {
+        min-height: 420px;
+        padding: 3rem 1.5rem;
+        background-image:
+            linear-gradient(180deg,
+                rgba(24, 16, 11, 0.78) 0%,
+                rgba(24, 16, 11, 0.80) 100%),
+            url('/BusinessImages/hero-banner.png');
+    }
     .hero h1 { font-size: 2.1rem; }
+    .hero-subtitle { font-size: 1rem; }
     .product-grid { grid-template-columns: 1fr; }
 }

@@ -70,8 +70,14 @@ public class CartServiceImpl implements CartService {
         if (quantity <= 0) throw new BadParameterException("Quantity must be greater than zero");
 
         // Resolve the product entity here, in the layer that owns persistence — the controller
-        // only ever passes the productCode from the form. Inactive products can't be added.
-        Product product = activeProduct(productCode);
+        // only ever passes the productCode from the form. Distinguish a genuinely missing
+        // product from a deactivated one so the caller can show an accurate message;
+        // inactive products must never be added to a cart.
+        Product product = productRepository.findByProductCode(productCode)
+                .orElseThrow(() -> new NotFoundException("Product not found: " + productCode));
+        if (!product.isActive()) {
+            throw new BadParameterException("This product is inactive and cannot be added to the cart.");
+        }
 
         User user = authService.getCurrentUser();
         // If this product is already in the cart, bump the existing line rather than duplicating it.

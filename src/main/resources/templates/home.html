@@ -15,13 +15,15 @@
         <p class="info-banner" th:if="${infoMessage}" th:text="${infoMessage}"></p>
 
         <section class="hero">
-            <p class="hero-eyebrow">Handcrafted Wooden Puzzle Store</p>
-            <h1>Beautiful puzzles built to challenge, display, and enjoy.</h1>
-            <p class="hero-subtitle">
-                Discover mechanical builds, decorative pieces, and gift-worthy wooden puzzles
-                for curious minds and careful hands.
-            </p>
-            <a th:href="@{/products/catalog}" class="hero-cta">Shop all puzzles</a>
+            <div class="hero-content">
+                <p class="hero-eyebrow">Handcrafted Wooden Puzzle Store</p>
+                <h1>Beautiful puzzles built to challenge, display, and enjoy.</h1>
+                <p class="hero-subtitle">
+                    Discover mechanical builds, decorative pieces, and gift-worthy wooden puzzles
+                    for curious minds and careful hands.
+                </p>
+                <a th:href="@{/products/catalog}" class="hero-cta">Shop all puzzles</a>
+            </div>
         </section>
 
         <!-- ${categories} : Category enum values (Category.values()) -->

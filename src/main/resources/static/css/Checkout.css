@@ -109,6 +109,14 @@
     top: 2rem;
 }
 
+/* The "← Back to Cart" link lives inside this card (not at the top of the page),
+   so override the global vertical margins: small gap from the total above,
+   none below, so it doesn't add dead space inside the card. It still aligns to
+   the card's left padding. */
+.order-summary .back-link {
+    margin: 1.25rem 0 0;
+}
+
 .summary-item,
 .summary-row {
     display: flex;
