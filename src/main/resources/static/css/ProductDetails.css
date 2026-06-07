@@ -274,8 +274,10 @@
     transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
-.detail-edit-btn { color: var(--text-secondary); }
-.detail-edit-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+
+.detail-edit-btn, .active-toggle-button { color: var(--text-secondary); }
+.detail-edit-btn:hover, .active-toggle-button:hover { color: var(--accent); border-color: var(--accent); }
 
 .detail-delete-btn { color: #b3261e; }
 .detail-delete-btn:hover { background: #b3261e; color: #fff; border-color: #b3261e; }

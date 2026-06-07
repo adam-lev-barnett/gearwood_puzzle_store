@@ -370,8 +370,6 @@ public class ProductServiceImpl implements ProductService {
         product.setShortDescription(productCreateRequest.shortDescription());
         product.setLongDescription(productCreateRequest.longDescription());
         product.setAcquiredDate(productCreateRequest.acquiredDate());
-        // active, featured, and primaryImgSource are deliberately left untouched here so an edit
-        // can't wipe them — they're managed elsewhere (activate/deactivate, curation, seed data).
         productRepo.save(product);
     }
 
@@ -384,7 +382,7 @@ public class ProductServiceImpl implements ProductService {
         product.setActive(true);
         product.setFeatured(false);
         // Creating new manufacturers wasn't a requirement for this project, so to keep things simple
-        // the admin picks from existing manufacturers via a dropdown; setProductFields matches that
+        // the admin picks from existing manufacturers via a dropdown. setProductFields matches the
         // chosen name to a Manufacturer entity rather than letting the admin create one here.
         setProductFields(productCreateRequest, product);
         return new ProductAdminDto(product);
@@ -413,8 +411,7 @@ public class ProductServiceImpl implements ProductService {
     public boolean delete(String productCode) {
         Product product = productRepo.findByProductCode(productCode)
                 .orElseThrow( () -> new NotFoundException("Product does not exist"));
-        // Note: we deactivate (no exception) so the change actually commits — throwing here
-        // would roll back the very deactivation we just made within this @Transactional method.
+
         if (cartItemRepo.existsByProduct(product) || orderItemRepo.existsByProduct(product)) {
             product.setActive(false);
             productRepo.save(product);
