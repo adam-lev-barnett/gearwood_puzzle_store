@@ -6,6 +6,7 @@ import edu.barnett.gearwood_puzzle_store.entities.User;
 import edu.barnett.gearwood_puzzle_store.exceptions.NotFoundException;
 import edu.barnett.gearwood_puzzle_store.repositories.OrderRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
 
+    @Autowired
     public OrderServiceImpl(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }

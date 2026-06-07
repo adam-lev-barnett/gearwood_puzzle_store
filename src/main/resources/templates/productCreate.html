@@ -43,7 +43,7 @@
                     <label>Category
                         <select name="category" required>
                             <option value="">-- Select Category --</option>
-                            <option th:each="c : ${categories}" th:value="${c}" th:text="${c}"></option>
+                            <option th:each="c : ${categories}" th:value="${c}" th:text="${c.displayName}"></option>
                         </select>
                     </label>
                     <label>Price

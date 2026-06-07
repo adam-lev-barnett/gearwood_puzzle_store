@@ -15,14 +15,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findByProductCode(String productCode);
     Optional<Product> findByProductCodeAndActiveTrue(String productCode);
     boolean existsByProductCode(String productCode);
-    boolean existsByManufacturer(Manufacturer manufacturer);
 
     List<Product> findByActiveTrue();
     List<Product> findByActiveTrueAndFeaturedTrue();
-    List<Product> findByActiveTrueAndCategory(Category category);
-    List<Product> findByActiveTrueAndDifficulty(Difficulty difficulty);
-    List<Product> findByActiveTrueAndPriceBetween(BigDecimal min, BigDecimal max);
-    List<Product> findByActiveTrueAndNameContainingIgnoreCase(String keyword);
 
     List<Product> findByNameContainingIgnoreCase(String keyword);
     List<Product> findByCategory(Category category);

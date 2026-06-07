@@ -8,17 +8,26 @@
 </head>
 <body>
     <main layout:fragment="content">
-        <div class="error-container card">
-            <h1>Something went wrong</h1>
+        <section class="error-page">
+            <div class="error-art">
+                <img th:src="@{/BusinessImages/error-image.png}"
+                     alt="A puzzle with a missing piece" />
+            </div>
 
-            <!-- ${errorMessage} : friendly message set by your controller/handler.
-                 Never render raw exceptions or stack traces here (spec 13). -->
-            <p th:text="${errorMessage} ?: 'An unexpected error occurred. Please try again.'">
-                Something went wrong. Please try again.
-            </p>
+            <div class="error-content card">
+                <!-- Big, glanceable status code; defaults set by GlobalExceptionHandler. -->
+                <span class="error-status" th:text="${status} ?: 'Oops'">404</span>
+                <h1 class="error-title">Something went wrong</h1>
 
-            <a th:href="@{/home}" class="action-button">Return Home</a>
-        </div>
+                <!-- Friendly, non-technical message (spec 13: no raw stack traces). -->
+                <p class="error-message">
+                    We couldn't quite put this page together. A piece may be missing
+                    or out of place.
+                </p>
+
+                <a th:href="@{/home}" class="action-button">Return Home</a>
+            </div>
+        </section>
     </main>
 </body>
 </html>

@@ -21,7 +21,7 @@
                         <div class="cart-item-info">
                             <h3 th:text="${item.name()}"></h3>
                             <p><span class="label">Product Code:</span> <span th:text="${item.productCode()}"></span></p>
-                            <p><span class="label">Category:</span> <span th:text="${item.category()}"></span></p>
+                            <p><span class="label">Category:</span> <span th:text="${item.category().displayName}"></span></p>
                             <p><span class="label">Difficulty:</span> <span th:text="${item.difficulty()}"></span></p>
                             <p><span class="label">Unit Price:</span> <span th:text="${'$' + item.unitPrice()}"></span></p>
                             <p><span class="label">Line Total:</span> <span th:text="${'$' + item.lineTotal()}"></span></p>

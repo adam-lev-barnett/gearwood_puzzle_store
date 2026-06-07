@@ -26,25 +26,31 @@
             </div>
         </section>
 
+        <section class="feature-strip stagger" data-reveal>
+            <div class="feature"><strong>Free shipping</strong><span>on orders over $75</span></div>
+            <div class="feature"><strong>Handcrafted</strong><span>premium hardwood pieces</span></div>
+            <div class="feature"><strong>Built to display</strong><span>mechanical &amp; decorative</span></div>
+        </section>
+
         <!-- ${categories} : Category enum values (Category.values()) -->
         <section class="category-section">
-            <h2>Find the style that fits your interest</h2>
-            <div class="category-grid">
+            <h2 data-reveal>Find the style that fits your interest</h2>
+            <div class="category-grid stagger" data-reveal>
                 <a th:each="cat : ${categories}"
                    th:href="@{/products/catalog(category=${cat})}"
                    class="category-card">
-                    <span th:text="${cat}">CATEGORY</span>
+                    <span th:text="${cat.displayName}">CATEGORY</span>
                 </a>
             </div>
         </section>
 
         <!-- ${featuredProducts} : List<ProductSummaryDto> of active products to highlight -->
         <section class="featured-section">
-            <div class="featured-header">
+            <div class="featured-header" data-reveal>
                 <h2>Popular puzzles to start with</h2>
                 <a th:href="@{/products/catalog}">View all products</a>
             </div>
-            <div class="product-grid">
+            <div class="product-grid stagger" data-reveal>
                 <th:block th:each="product : ${featuredProducts}">
                     <div th:replace="~{fragments/productCard ::
                         productCard(
@@ -60,6 +66,8 @@
                 </th:block>
             </div>
         </section>
+
+        <script th:src="@{/js/home.js}" defer></script>
 
     </main>
 </body>

@@ -10,6 +10,7 @@ import edu.barnett.gearwood_puzzle_store.exceptions.NotFoundException;
 import edu.barnett.gearwood_puzzle_store.repositories.CartItemRepository;
 import edu.barnett.gearwood_puzzle_store.repositories.ProductRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,6 @@ import java.util.List;
 @PreAuthorize("isAuthenticated()")
 public class CartServiceImpl implements CartService {
 
-    // Requirements: 8.25% tax, $8.99 flat shipping, free at or above $75.00.
     // Adjust if requirements change
     private static final BigDecimal TAX_RATE = new BigDecimal("0.0825");
     private static final BigDecimal STANDARD_SHIPPING = new BigDecimal("8.99");
@@ -31,6 +31,7 @@ public class CartServiceImpl implements CartService {
     private final ProductRepository productRepository;
     private final AuthService authService;
 
+    @Autowired
     public CartServiceImpl(CartItemRepository cartItemRepository,
                            ProductRepository productRepository,
                            AuthService authService) {
@@ -80,7 +81,7 @@ public class CartServiceImpl implements CartService {
         }
 
         User user = authService.getCurrentUser();
-        // If this product is already in the cart, bump the existing line rather than duplicating it.
+        // Prevents duplicating item line if the item is already in the cart.
         CartItem item = cartItemRepository.findByUserAndProduct(user, product)
                 .orElseGet(() -> new CartItem(user, product, 0));
         item.setQuantity(item.getQuantity() + quantity);
@@ -90,7 +91,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public void updateQuantity(String productCode, int quantity) {
-        // A quantity of zero (or less) is treated as "remove from cart".
+        // A quantity <= 0 removes the product from the cart
         if (quantity <= 0) {
             removeItem(productCode);
             return;

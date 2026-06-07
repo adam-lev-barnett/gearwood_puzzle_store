@@ -55,14 +55,12 @@ public class Product {
     @Column
     private Boolean featured;
 
-    /** Admin-only field — the date the product was acquired into the catalog.
-     *  Per spec it defaults to the current date on creation. Never exposed to customers. */
     @Column(nullable = false)
     private LocalDate acquiredDate;
 
     public Product() {}
 
-    /** Default acquiredDate to the current date on first persist if it wasn't set explicitly. */
+    /** Default acquiredDate to the current date if it wasn't set explicitly. */
     @PrePersist
     private void onCreate() {
         if (acquiredDate == null) {

@@ -1,0 +1,92 @@
+/* ============================================================================
+   Error — friendly full-page error layout for the "Dark Atelier" theme.
+   Palette, .card, and .action-button come from GlobalStyles.css; this file
+   only handles the two-column art + message composition and its motion.
+   ========================================================================== */
+
+.error-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.5rem, 5vw, 4.5rem);
+    flex-wrap: wrap;
+    min-height: calc(100vh - 220px);
+    padding: clamp(2rem, 6vw, 5rem) clamp(1.25rem, 6vw, 4rem);
+}
+
+/* ── Artwork ──────────────────────────────────────────────────────────────
+   Gentle float so the missing-piece image feels alive without distracting. */
+.error-art {
+    flex: 0 1 420px;
+    max-width: 420px;
+}
+
+.error-art img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 18px;
+    filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.55));
+    animation: errorFloat 6s ease-in-out infinite alternate;
+}
+
+@keyframes errorFloat {
+    from { transform: translateY(-6px) rotate(-0.6deg); }
+    to   { transform: translateY(6px)  rotate(0.6deg); }
+}
+
+/* ── Message card ─────────────────────────────────────────────────────────── */
+.error-content {
+    flex: 1 1 360px;
+    max-width: 460px;
+    text-align: center;
+}
+
+.error-status {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(4rem, 12vw, 7rem);
+    line-height: 0.9;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+}
+
+.error-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 4vw, 2.25rem);
+    color: var(--text-primary);
+    margin: 0.75rem 0 0.25rem;
+}
+
+.error-reason {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--text-secondary);
+    margin: 0 0 1.25rem;
+}
+
+.error-message {
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    margin: 0 auto 2rem;
+    max-width: 38ch;
+}
+
+.error-content .action-button {
+    display: inline-block;
+}
+
+/* ── Responsive: stack art above message on narrow screens ─────────────────── */
+@media (max-width: 720px) {
+    .error-art { max-width: 280px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .error-art img { animation: none; }
+}

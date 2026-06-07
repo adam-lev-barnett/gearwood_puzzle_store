@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
 
-        // Automatically assign them the customer role - they shouldn't be able to choose their roles
+        // Automatically assign them the customer role. They shouldn't be able to choose their roles
         user.addRole(roleRepository.findByName("CUSTOMER").orElseThrow(
                 () -> new NotFoundException("CUSTOMER role not found")
         ));

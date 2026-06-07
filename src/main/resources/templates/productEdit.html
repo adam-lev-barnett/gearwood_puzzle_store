@@ -55,7 +55,7 @@
                             <option value="">-- Select Category --</option>
                             <option th:each="c : ${categories}"
                                     th:value="${c}"
-                                    th:text="${c}"
+                                    th:text="${c.displayName}"
                                     th:selected="${product != null and c == product.summary().category()}"></option>
                         </select>
                     </label>

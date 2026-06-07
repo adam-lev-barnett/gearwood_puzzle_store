@@ -7,4 +7,6 @@ import edu.barnett.gearwood_puzzle_store.payment.model.PaymentRequest;
 
 public interface CheckoutService {
     OrderSummaryDto processCheckout(User user, ShippingInfo shippingInfo, PaymentRequest paymentRequest);
+
+    String generateOrderNumber();
 }

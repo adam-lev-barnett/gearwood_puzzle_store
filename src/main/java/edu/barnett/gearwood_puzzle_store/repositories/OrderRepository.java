@@ -10,5 +10,4 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<OrderData, Long> {
     List<OrderData> findByUserOrderByOrderDateTimeDesc(User user);
     Optional<OrderData> findByOrderNumberAndUser(String orderNumber, User user);
-    Optional<OrderData> findByOrderNumber(String orderNumber);
 }

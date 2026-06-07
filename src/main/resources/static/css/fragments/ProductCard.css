@@ -29,7 +29,8 @@
     object-fit: scale-down;
     display: block;
     border-bottom: 1px solid var(--border);
-    background: var(--bg);
+    /* Warm light tile so product photos stay clean against the dark card. */
+    background: #F1E8DB;
 }
 
 /* ── Body ───────────────────────────────────────────────────── */

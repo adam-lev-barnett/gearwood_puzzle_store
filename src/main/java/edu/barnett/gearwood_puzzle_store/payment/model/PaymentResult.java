@@ -2,9 +2,9 @@ package edu.barnett.gearwood_puzzle_store.payment.model;
 
 public class PaymentResult {
 
-    private PaymentStatus status;
-    private String message;
-    private String transactionId;
+    private final PaymentStatus status;
+    private final String message;
+    private final String transactionId;
 
     public PaymentResult(PaymentStatus status, String message, String transactionId) {
         this.status = status;

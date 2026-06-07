@@ -16,15 +16,12 @@ public interface ProductService {
     List<ProductSummaryDto> getAllActive();
     List<ProductSummaryDto> getAll();
 
-    /** Active products flagged as featured — for the home page showcase. */
     List<ProductSummaryDto> getFeaturedProducts();
 
     ProductSummaryDto getByProductCode(String productCode);
 
-    /** Admin-only fetch: includes admin fields (e.g. acquiredDate) not exposed to customers. */
     ProductAdminDto getByProductCodeAsAdmin(String productCode);
 
-    /* Dispatcher — null fields are ignored, falls back to getAll() if everything is null */
     List<ProductSummaryDto> search(String keyword, Category category, Difficulty difficulty, BigDecimal minPrice, BigDecimal maxPrice);
 
     /* Named filter methods */

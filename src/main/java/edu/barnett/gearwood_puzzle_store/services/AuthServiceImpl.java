@@ -7,6 +7,7 @@ import edu.barnett.gearwood_puzzle_store.jwt.JwtUtil;
 import edu.barnett.gearwood_puzzle_store.repositories.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +25,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
+    @Autowired
     public AuthServiceImpl(AuthenticationManager authenticationManager,
                            JwtUtil jwtUtil, UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
@@ -74,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(0);
-        cookie.setSecure(true); // only if your app uses HTTPS
+        cookie.setSecure(true);
         response.addCookie(cookie);
     }
 

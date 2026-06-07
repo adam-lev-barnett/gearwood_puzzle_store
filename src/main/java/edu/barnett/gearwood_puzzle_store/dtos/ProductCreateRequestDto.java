@@ -8,8 +8,7 @@ import java.time.LocalDate;
 
 public record ProductCreateRequestDto(String productCode,
                                       String name,
-                                      // Manufacturer NAME chosen from the dropdown; the service resolves it
-                                      // to a Manufacturer entity. Keeps the DTO free of entity references.
+                                      // Manufacturer name chosen from dropdown to simplify product creation so admin doesn't need to create a new manufacturer if one doesn't exist - out of project scope
                                       String manufacturer,
                                       Integer numberOfPieces,
                                       Difficulty difficulty,
@@ -18,8 +17,4 @@ public record ProductCreateRequestDto(String productCode,
                                       String shortDescription,
                                       String longDescription,
                                       LocalDate acquiredDate
-                                      // active, featured, and primaryImgSource are intentionally NOT here:
-                                      // the admin forms don't manage them (active is toggled via activate/
-                                      // deactivate, featured is curated, images aren't uploaded). Binding them
-                                      // here would clobber those values to false/null on every edit.
                                       ) { }

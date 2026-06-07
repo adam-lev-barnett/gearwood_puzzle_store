@@ -14,6 +14,7 @@ import edu.barnett.gearwood_puzzle_store.repositories.ManufacturerRepository;
 import edu.barnett.gearwood_puzzle_store.repositories.OrderItemRepository;
 import edu.barnett.gearwood_puzzle_store.repositories.ProductRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -27,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
     private final OrderItemRepository orderItemRepo;
     private final ManufacturerRepository manufacturerRepo;
 
+    @Autowired
     public ProductServiceImpl(ProductRepository productRepo, CartItemRepository cartItemRepo,
                               OrderItemRepository orderItemRepo, ManufacturerRepository manufacturerRepo) {
         this.productRepo = productRepo;
@@ -35,7 +37,6 @@ public class ProductServiceImpl implements ProductService {
         this.manufacturerRepo = manufacturerRepo;
     }
 
-    /** Non-customers should see all products*/
     @Override
     public List<ProductSummaryDto> getAll() {
         return productRepo
@@ -55,8 +56,6 @@ public class ProductServiceImpl implements ProductService {
                 .toList();
     }
 
-    /** Active + featured, for the home page showcase. Featured is an admin-only flag,
-     *  so it's used here only to select which products to show — never surfaced in the DTO. */
     @Override
     public List<ProductSummaryDto> getFeaturedProducts() {
         return productRepo
@@ -83,6 +82,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     // ~~~~~~~ Search methods ~~~~~~~~~~~~~~
+    /** Goes through entire set of filter options and fields and determines which searches and filters are needed based on filled and empty fields in the form*/
     @Override
     public List<ProductSummaryDto> search(String keyword, Category category, Difficulty difficulty, BigDecimal minPrice, BigDecimal maxPrice) {
         boolean hasKeyword   = keyword != null && !keyword.isBlank();
@@ -360,7 +360,6 @@ public class ProductServiceImpl implements ProductService {
     public void setProductFields(ProductCreateRequestDto productCreateRequest, Product product) {
         product.setProductCode(productCreateRequest.productCode());
         product.setName(productCreateRequest.name());
-        // Resolve the manufacturer chosen in the dropdown (by name) to its entity.
         Manufacturer manufacturer = manufacturerRepo.findByName(productCreateRequest.manufacturer())
                 .orElseThrow(() -> new NotFoundException("Manufacturer not found: " + productCreateRequest.manufacturer()));
         product.setManufacturer(manufacturer);
@@ -385,7 +384,7 @@ public class ProductServiceImpl implements ProductService {
         product.setActive(true);
         product.setFeatured(false);
         // Creating new manufacturers wasn't a requirement for this project, so to keep things simple
-        // the admin picks from existing manufacturers via a dropdown; setProductFields resolves that
+        // the admin picks from existing manufacturers via a dropdown; setProductFields matches that
         // chosen name to a Manufacturer entity rather than letting the admin create one here.
         setProductFields(productCreateRequest, product);
         return new ProductAdminDto(product);
@@ -409,13 +408,6 @@ public class ProductServiceImpl implements ProductService {
         productRepo.save(product);
     }
 
-    /**
-     * Hard-deletes a product if nothing references it. If it's in a cart or a past order
-     * (the order line keeps an FK to it), it can't be removed without breaking that data,
-     * so it's deactivated instead — staying out of the catalog while history is preserved.
-     *
-     * @return true if the product was deleted, false if it was deactivated instead.
-     */
     @Transactional
     @Override
     public boolean delete(String productCode) {

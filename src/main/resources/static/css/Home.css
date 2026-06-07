@@ -1,51 +1,87 @@
-/* .info-banner is global (GlobalStyles). */
+/* ============================================================================
+   Home — page-specific layout & motion for the "Dark Atelier" homepage.
+   The dark palette, body atmosphere, and sleek header now live in the shared
+   GlobalStyles.css / header.css (the whole site is dark), so this file only
+   holds the hero, feature strip, category/featured sections, and scroll motion.
+   ========================================================================== */
 
-/* ── Hero ───────────────────────────────────────────────────── */
-
-/* Full-bleed banner: the workbench photo with a warm dark scrim on the left
-   (where the copy sits) fading toward the subject on the right. */
+/* ── Hero: living banner ────────────────────────────────────────────────────
+   Photo on ::before (slow Ken Burns zoom), warm scrim on ::after that also
+   fades the bottom edge into the page so there's no hard seam. */
 .hero {
     position: relative;
     display: flex;
     align-items: center;
-    min-height: 560px;
+    min-height: min(78vh, 660px);
     padding: 4rem clamp(1.5rem, 7vw, 6.5rem);
-    background-image:
-        linear-gradient(100deg,
-            rgba(24, 16, 11, 0.88) 0%,
-            rgba(24, 16, 11, 0.66) 38%,
-            rgba(24, 16, 11, 0.30) 68%,
-            rgba(24, 16, 11, 0.10) 100%),
-        url('/BusinessImages/hero-banner.png');
-    background-size: cover;
-    background-position: center right;
     overflow: hidden;
+    background: var(--bg);
+    isolation: isolate;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: url('/BusinessImages/hero-banner.png') center right / cover no-repeat;
+    animation: heroZoom 22s ease-in-out infinite alternate;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+        linear-gradient(95deg,
+            rgba(15, 11, 8, 0.94) 0%,
+            rgba(15, 11, 8, 0.72) 36%,
+            rgba(15, 11, 8, 0.34) 66%,
+            rgba(15, 11, 8, 0.12) 100%),
+        linear-gradient(to top, var(--bg) 0%, transparent 24%);
 }
 
 .hero-content {
     position: relative;
+    z-index: 2;
     max-width: 600px;
 }
 
+@keyframes heroZoom {
+    from { transform: scale(1.02); }
+    to   { transform: scale(1.12); }
+}
+
 .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
     font-family: 'Jost', sans-serif;
     font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--accent);
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.35rem;
     animation: heroRise 0.5s ease both;
+}
+
+.hero-eyebrow::before {
+    content: '';
+    width: 34px;
+    height: 1px;
+    background: var(--accent);
 }
 
 .hero h1 {
     text-align: left;
-    color: #FCF7F0;
-    font-size: 3.2rem;
-    line-height: 1.1;
+    color: var(--text-primary);
+    font-size: 3.4rem;
+    line-height: 1.08;
     letter-spacing: 0.01em;
     margin-bottom: 1.5rem;
-    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
     animation: heroRise 0.5s ease 0.08s both;
 }
 
@@ -54,7 +90,7 @@
     font-size: 1.05rem;
     font-weight: 300;
     line-height: 1.7;
-    color: rgba(252, 247, 240, 0.85);
+    color: rgba(244, 235, 221, 0.82);
     max-width: 520px;
     margin: 0 0 2.25rem;
     animation: heroRise 0.5s ease 0.16s both;
@@ -64,26 +100,22 @@
     display: inline-block;
     font-family: 'Jost', sans-serif;
     font-size: 0.82rem;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #fff;
+    color: #1A130C;
     background: var(--accent);
     text-decoration: none;
     padding: 0.95rem 2.5rem;
     border-radius: 4px;
-    box-shadow: var(--shadow);
-    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 8px 30px rgba(224, 160, 74, 0.28);
+    transition: background 0.2s, transform 0.12s ease-out, box-shadow 0.2s;
     animation: heroRise 0.5s ease 0.24s both;
 }
 
 .hero-cta:hover {
     background: var(--accent-hover);
-    box-shadow: 0 8px 24px rgba(196, 130, 42, 0.22);
-}
-
-.hero-cta:active {
-    transform: scale(0.98);
+    box-shadow: 0 14px 44px rgba(224, 160, 74, 0.45);
 }
 
 @keyframes heroRise {
@@ -91,12 +123,53 @@
     to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ── Feature strip ──────────────────────────────────────────────────────────
+   Slim trust row right under the hero, divided by brass hairlines. */
+.feature-strip {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2.5rem;
+    max-width: 1000px;
+    margin: 2.5rem auto 0.5rem;
+    padding: 1.5rem 2rem;
+}
+
+.feature {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0 2.5rem;
+    border-left: 1px solid var(--border);
+    text-align: center;
+}
+
+.feature:first-child {
+    border-left: none;
+}
+
+.feature strong {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.01em;
+}
+
+.feature span {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+}
+
 /* ── Shared section heading (h2) ────────────────────────────── */
 
 .category-section h2,
 .featured-header h2 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 2rem;
+    font-size: 2.1rem;
     font-weight: 600;
     letter-spacing: 0.01em;
     color: var(--text-primary);
@@ -107,13 +180,13 @@
 
 .category-section {
     max-width: 1100px;
-    margin: 1.5rem auto;
-    padding: 2.5rem 2rem;
+    margin: 2.5rem auto;
+    padding: 3rem 2rem;
     text-align: center;
 }
 
 .category-section h2 {
-    margin-bottom: 2rem;
+    margin-bottom: 2.25rem;
 }
 
 .category-grid {
@@ -128,11 +201,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 88px;
+    min-height: 96px;
     padding: 1rem;
-    background: var(--surface);
+    background: linear-gradient(160deg, var(--surface) 0%, #181109 100%);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 10px;
     box-shadow: var(--shadow);
     text-decoration: none;
     position: relative;
@@ -164,8 +237,8 @@
 }
 
 .category-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 28px rgba(44, 26, 14, 0.12);
+    transform: translateY(-5px);
+    box-shadow: 0 16px 38px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(224, 160, 74, 0.22);
     border-color: var(--accent);
 }
 
@@ -181,7 +254,7 @@
 
 .featured-section {
     max-width: 1280px;
-    margin: 2rem auto 4rem;
+    margin: 2rem auto 5rem;
     padding: 0 2rem;
 }
 
@@ -222,42 +295,106 @@
     transform: translateX(4px);
 }
 
-/* Featured grid — the page reuses the ProductCard fragment but not the
-   catalog stylesheet, so the grid is defined here. */
+/* Featured grid — reuses the ProductCard fragment; grid lives here. */
 .product-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
 }
 
+/* Dark-card refinements: warm light image tile keeps product photos clean,
+   the whole card lifts with a brass-edged glow, and the photo zooms inside. */
+.featured-section .product-card {
+    animation: none;
+    height: 100%;
+    background: linear-gradient(165deg, var(--surface) 0%, #1A130D 100%);
+}
+
+.featured-section .card-image {
+    height: 230px;
+    background: #F1E8DB;
+    transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.featured-section .product-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(224, 160, 74, 0.2);
+}
+
+.featured-section .product-card:hover .card-image {
+    transform: scale(1.06);
+}
+
+/* ── Scroll-reveal ──────────────────────────────────────────────────────────
+   Single elements fade/rise as a block; .stagger containers cascade children.
+   JS adds .is-visible when the element enters the viewport. */
+[data-reveal]:not(.stagger) {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+[data-reveal]:not(.stagger).is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+[data-reveal].stagger > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+[data-reveal].stagger.is-visible > * {
+    opacity: 1;
+    transform: none;
+}
+
+[data-reveal].stagger.is-visible > *:nth-child(1) { transition-delay: 0.04s; }
+[data-reveal].stagger.is-visible > *:nth-child(2) { transition-delay: 0.10s; }
+[data-reveal].stagger.is-visible > *:nth-child(3) { transition-delay: 0.16s; }
+[data-reveal].stagger.is-visible > *:nth-child(4) { transition-delay: 0.22s; }
+[data-reveal].stagger.is-visible > *:nth-child(5) { transition-delay: 0.28s; }
+[data-reveal].stagger.is-visible > *:nth-child(6) { transition-delay: 0.34s; }
+[data-reveal].stagger.is-visible > *:nth-child(7) { transition-delay: 0.40s; }
+[data-reveal].stagger.is-visible > *:nth-child(n+8) { transition-delay: 0.46s; }
+
 /* ── Responsive ─────────────────────────────────────────────── */
 
 @media (max-width: 900px) {
-    .hero {
-        min-height: 460px;
-        /* Strengthen the scrim so copy stays legible as the column narrows. */
-        background-image:
-            linear-gradient(100deg,
-                rgba(24, 16, 11, 0.90) 0%,
-                rgba(24, 16, 11, 0.72) 55%,
-                rgba(24, 16, 11, 0.40) 100%),
-            url('/BusinessImages/hero-banner.png');
+    .hero { min-height: 460px; }
+    .hero::after {
+        background:
+            linear-gradient(95deg, rgba(15, 11, 8, 0.92) 0%, rgba(15, 11, 8, 0.74) 55%, rgba(15, 11, 8, 0.42) 100%),
+            linear-gradient(to top, var(--bg) 0%, transparent 24%);
     }
-    .hero h1 { font-size: 2.5rem; }
+    .hero h1 { font-size: 2.6rem; }
     .product-grid { grid-template-columns: repeat(2, 1fr); }
+    .feature { padding: 0 1.25rem; }
+    .feature-strip { gap: 1.25rem; }
 }
 
 @media (max-width: 560px) {
-    .hero {
-        min-height: 420px;
-        padding: 3rem 1.5rem;
-        background-image:
-            linear-gradient(180deg,
-                rgba(24, 16, 11, 0.78) 0%,
-                rgba(24, 16, 11, 0.80) 100%),
-            url('/BusinessImages/hero-banner.png');
+    .main-header { padding: 0.6rem 1.25rem; }
+    .main-header .logo img { height: 44px; }
+    .hero { min-height: 420px; padding: 3rem 1.5rem; }
+    .hero::after {
+        background:
+            linear-gradient(180deg, rgba(15, 11, 8, 0.78), rgba(15, 11, 8, 0.82)),
+            linear-gradient(to top, var(--bg) 0%, transparent 30%);
     }
     .hero h1 { font-size: 2.1rem; }
     .hero-subtitle { font-size: 1rem; }
     .product-grid { grid-template-columns: 1fr; }
+    .feature { border-left: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero::before { animation: none; }
+    [data-reveal],
+    [data-reveal].stagger > * {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
 }
